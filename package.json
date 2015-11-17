@@ -1,0 +1,21 @@
+{
+  "name": "dmv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha"
+  },
+  "keywords": [],
+  "author": "Zeke Nierenberg",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^3.4.1",
+    "chai-spies": "^0.7.1",
+    "mocha": "^2.3.4",
+    "mongoose": "^4.2.6"
+  },
+  "dependencies": {
+    "lodash": "^3.10.1"
+  }
+}

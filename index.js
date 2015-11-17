@@ -2,8 +2,8 @@
 const Noun = require('./noun');
 const Role = require('./role');
 
-const roles = {};
-const nouns = {};
+const roleManager = require('./roleManager');
+const nounManager = require('./nounManager');
 
 
 /**
@@ -13,8 +13,8 @@ const nouns = {};
  * @return {noun}       returns noun instance
  */
 exports.noun = function(name, after) {
-  let noun = nouns[name] || new Noun(name);
-  noun._afterSetup(after);
+  let noun = nounManager.get(name) || nounManager.set(name, new Noun(name));
+  if(after) { noun._afterSetup(after); }
   return noun;
 };
 
@@ -25,12 +25,14 @@ exports.noun = function(name, after) {
  * @return {role}       returns role instance
  */
 exports.role = function(name, after) {
-  let role = roles[name] || new Role(name);
-  role._afterSetup(after);
+  let role = roleManager.get(name) || roleManager.set(name, new Role(name));
+  if(after) { role._afterSetup(after); }
   return role;
 };
 
+exports.mongoosePlugin = require('./mongoosePlugin');
+
 process.nextTick(function() {
-  Object.keys(roles).concat(Object.keys(nouns))
+  roleManager.getAll().concat(nounManager.getAll())
     .forEach( (instance) => instance.setup() );
 });
