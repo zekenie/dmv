@@ -3,11 +3,24 @@
 const roles = {};
 const _ = require('lodash');
 
+/**
+ * @module  RoleManager
+ */
+
 module.exports = {
+  /**
+   * Gets a role by name
+   * @param  {string} name
+   * @return {role}
+   */
   get: function(name) {
     return roles[name];
   },
 
+  /**
+   * gets all registered roles
+   * @return {role[]}
+   */
   getAll: function() {
     return _.values(roles);
   },

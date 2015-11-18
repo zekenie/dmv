@@ -1,33 +1,26 @@
 'use strict';
-
+/**
+ * @class Role
+ */
 const nounManager = require('./nounManager');
 
 class Role {
   constructor(name) {
     this.name = name;
-    this._afterSetupFns = [];
   }
 
   /**
-   * pushes fn to list of functions to run after setup
-   * @protected
-   * @param  {Function} fn will be passed insnatce
+   * Checks if a given noun can perform a given verb
+   * @param  {string} verb
+   * @param  {string} noun
+   * @return {boolean}
    */
-  _afterSetup(fn) {
-    this._afterSetupFns.push(fn);
-  }
-
-  /**
-   * Calls all aftersetup methods
-   */
-  setup() {
-    this._afterSetupFns.forEach( (fn) => fn.call(this, this), this);
-  }
-
   can(verb, noun) {
     if(!nounManager.has(noun)) { return false; }
     return nounManager.get(noun).checkAuthorization(this.name, verb);
   }
 }
+
+require('./setupMixin')(Role);
 
 module.exports = Role;

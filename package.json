@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha"
+    "test": "./node_modules/mocha/bin/mocha",
+    "doc": "jsdoc -c ./jsdoc.conf.json"
   },
   "keywords": [],
   "author": "Zeke Nierenberg",

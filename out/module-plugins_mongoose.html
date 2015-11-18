@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Module: plugins/mongoose</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,35 +17,9 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Module: plugins/mongoose</h1>
 
     
-
-
-
-    
-
-
-    <h3> </h3>
-
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
 
 
 
@@ -54,7 +28,8 @@
 
 <header>
     
-        <h2>noun.js</h2>
+        
+            
         
     
 </header>
@@ -63,10 +38,29 @@
     <div class="container-overview">
     
         
-            <div class="description"><p>Exports the Noun class</p></div>
+            <div class="description"><p>This is a <a href="http://mongoosejs.com/docs/plugins.html">mongoose plugin</a>.
+  It exports a function which modifies a mongoose schema.
+  It adds 3 paths:</p>
+<pre class="prettyprint source"><code>- roles
+- permissionsWhitelist
+- PermissionsBlacklist</code></pre><p>  It is meant to be used on a sort of user model.</p></div>
         
 
         
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <dl class="details">
@@ -98,7 +92,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="noun.js.html">noun.js</a>, <a href="noun.js.html#line4">line 4</a>
+        <a href="mongoosePlugin.js.html">mongoosePlugin.js</a>, <a href="mongoosePlugin.js.html#line3">line 3</a>
     </li></ul></dd>
     
 
@@ -110,6 +104,20 @@
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
     
     </div>
@@ -117,10 +125,25 @@
     
 
     
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:roleManager</li>
+        
+            <li>module:lodash</li>
+        </ul>
+    
 
     
 
      
+        <h3 class="subsection-title">Mixins</h3>
+
+        <dl>
+            <dt><a href="module-plugins_mongoose-mongoosePlugin.html">mongoosePlugin</a></dt>
+            <dd></dd>
+        </dl>
+    
 
     
 

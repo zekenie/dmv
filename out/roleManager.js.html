@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Home</title>
+    <title>JSDoc: Source: roleManager.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,123 +17,64 @@
 
 <div id="main">
 
-    <h1 class="page-title">Home</h1>
+    <h1 class="page-title">Source: roleManager.js</h1>
 
     
 
 
 
     
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
+const roles = {};
+const _ = require('lodash');
 
-    <h3> </h3>
+/**
+ * @module  RoleManager
+ */
 
+module.exports = {
+  /**
+   * Gets a role by name
+   * @param  {string} name
+   * @return {role}
+   */
+  get: function(name) {
+    return roles[name];
+  },
 
+  /**
+   * gets all registered roles
+   * @return {role[]}
+   */
+  getAll: function() {
+    return _.values(roles);
+  },
 
+  has: function(name) {
+    return !!this.get(name);
+  },
 
+  set: function(name, value) {
+    roles[name] = value;
+    return value;
+  },
 
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-<section>
-
-<header>
-    
-        <h2>noun.js</h2>
-        
-    
-</header>
-
-<article>
-    <div class="container-overview">
-    
-        
-            <div class="description"><p>Exports the Noun class</p></div>
-        
-
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="noun.js.html">noun.js</a>, <a href="noun.js.html#line4">line 4</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+  can: function(roles, verb, noun) {
+    if(roles.some( (r) => !this.has(r), this)) { return false; }
+    return roles
+      .map(function(role) {
+        return this.get(role);
+      }, this)
+      .some(function(role) {
+        return role.can(verb, noun);
+      });
+  }
+};</code></pre>
+        </article>
+    </section>
 
 
 

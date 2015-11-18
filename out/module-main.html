@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Global</title>
+    <title>JSDoc: Module: main</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Global</h1>
+    <h1 class="page-title">Module: main</h1>
 
     
 
@@ -28,7 +28,8 @@
 
 <header>
     
-        <h2></h2>
+        
+            
         
     
 </header>
@@ -37,8 +38,24 @@
     <div class="container-overview">
     
         
+            <div class="description"><p>This is the root of the project. It allows users to regester nouns and roles with dmv. It also exports plugins.</p></div>
+        
 
         
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 <dl class="details">
@@ -68,6 +85,11 @@
     
 
     
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line1">line 1</a>
+    </li></ul></dd>
+    
 
     
 
@@ -77,12 +99,38 @@
 </dl>
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         
     
     </div>
 
     
 
+    
+        <h3 class="subsection-title">Requires</h3>
+
+        <ul>
+            <li>module:Noun</li>
+        
+            <li>module:Role</li>
+        
+            <li>module:roleManager</li>
+        
+            <li>module:nounManager</li>
+        </ul>
     
 
     
@@ -91,6 +139,79 @@
 
     
 
+    
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id=".mongoosePlugin"><span class="type-signature">(static) </span>mongoosePlugin<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>Returns the mongoose plugin function.</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line46">line 46</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="module-plugins_mongoose.html">module:plugins/mongoose</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
     
 
     
@@ -101,14 +222,14 @@
 
     
 
-    <h4 class="name" id="noun"><span class="type-signature"></span>noun<span class="signature">(name, after)</span><span class="type-signature"> &rarr; {<a href="global.html#noun">noun</a>}</span></h4>
+    <h4 class="name" id=".noun"><span class="type-signature">(static) </span>noun<span class="signature">(name, after)</span><span class="type-signature"> &rarr; {noun}</span></h4>
 
     
 
 
 
 <div class="description">
-    Regester a new noun
+    <p>Regester a new noun</p>
 </div>
 
 
@@ -160,7 +281,7 @@
 
             
 
-            <td class="description last">noun name</td>
+            <td class="description last"><p>noun name</p></td>
         </tr>
 
     
@@ -183,7 +304,7 @@
 
             
 
-            <td class="description last">fn to run after setup. Passed noun instance.</td>
+            <td class="description last"><p>fn to run after setup. Passed noun instance.</p></td>
         </tr>
 
     
@@ -224,7 +345,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line15">line 15</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line24">line 24</a>
     </li></ul></dd>
     
 
@@ -251,7 +372,7 @@
 
         
 <div class="param-desc">
-    returns noun instance
+    <p>returns noun instance</p>
 </div>
 
 
@@ -262,7 +383,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="global.html#noun">noun</a></span>
+<span class="param-type">noun</span>
 
 
     </dd>
@@ -277,14 +398,14 @@
 
     
 
-    <h4 class="name" id="role"><span class="type-signature"></span>role<span class="signature">(name, after)</span><span class="type-signature"> &rarr; {<a href="global.html#role">role</a>}</span></h4>
+    <h4 class="name" id=".role"><span class="type-signature">(static) </span>role<span class="signature">(name, after)</span><span class="type-signature"> &rarr; {role}</span></h4>
 
     
 
 
 
 <div class="description">
-    Regester a new role
+    <p>Regester a new role</p>
 </div>
 
 
@@ -336,7 +457,7 @@
 
             
 
-            <td class="description last">role name</td>
+            <td class="description last"><p>role name</p></td>
         </tr>
 
     
@@ -359,7 +480,7 @@
 
             
 
-            <td class="description last">fn to run after setup. Passed role instance.</td>
+            <td class="description last"><p>fn to run after setup. Passed role instance.</p></td>
         </tr>
 
     
@@ -400,7 +521,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="index.js.html">index.js</a>, <a href="index.js.html#line27">line 27</a>
+        <a href="index.js.html">index.js</a>, <a href="index.js.html#line36">line 36</a>
     </li></ul></dd>
     
 
@@ -427,7 +548,7 @@
 
         
 <div class="param-desc">
-    returns role instance
+    <p>returns role instance</p>
 </div>
 
 
@@ -438,7 +559,7 @@
     </dt>
     <dd>
         
-<span class="param-type"><a href="global.html#role">role</a></span>
+<span class="param-type">role</span>
 
 
     </dd>
@@ -464,13 +585,13 @@
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Noun.html">Noun</a></li></ul><h3>Global</h3><ul><li><a href="global.html#noun">noun</a></li><li><a href="global.html#role">role</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-main.html">main</a></li><li><a href="module-plugins_express.html">plugins/express</a></li><li><a href="module-plugins_mongoose.html">plugins/mongoose</a></li><li><a href="module-RoleManager.html">RoleManager</a></li></ul><h3>Classes</h3><ul><li><a href="Role.html">Role</a></li></ul><h3>Mixins</h3><ul><li><a href="module-plugins_mongoose-mongoosePlugin.html">mongoosePlugin</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Mon Nov 16 2015 11:36:43 GMT-0600 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Wed Nov 18 2015 10:29:34 GMT-0600 (CST)
 </footer>
 
 <script> prettyPrint(); </script>

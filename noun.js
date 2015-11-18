@@ -1,35 +1,17 @@
-// i need to take a user and ask what that user can do with this noun
-// that means i need to be able to pass the noun a role
-// and ask what permissions that role can do
 'use strict';
 
 class Noun {
   /**
+   * @constructor
+   * @fileOverview Exports the Noun class
    * @param  {string} name - name of noun
    * @return {noun}        - the created noun
    */
   constructor(name) {
     this.name = name;
-    this._afterSetupFns = [];
     this.verbs = new Set();
     this.permissions = {};
     ['create','read','update','delete'].forEach( (v) => this.can(v), this);
-  }
-
-  /**
-   * pushes fn to list of functions to run after setup
-   * @protected
-   * @param  {Function} fn will be passed insnatce
-   */
-  _afterSetup(fn) {
-    this._afterSetupFns.push(fn);
-  }
-
-  /**
-   * Calls all aftersetup methods
-   */
-  setup() {
-    this._afterSetupFns.forEach( (fn) => fn.call(this, this), this);
   }
 
   /**
@@ -72,11 +54,19 @@ class Noun {
     verbs.forEach( (v) => this.permissions[role].add(v) );
   }
 
+  /**
+   * Checks if a role is regestered and it has the permission
+   * @param  {string} role
+   * @param  {string} verb
+   * @return {boolean}
+   */
   checkAuthorization(role, verb) {
     return !!this.permissions[role] && this.permissions[role].has(verb);
   }
 
 }
+
+require('./setupMixin')(Noun);
 
 
 module.exports = Noun;

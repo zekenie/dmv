@@ -1,10 +1,18 @@
+/**
+ * @fileOverview This is the root of the project. It allows users to regester nouns and roles with dmv. It also exports plugins.
+ * @module main
+ * @requires Noun
+ * @requires Role
+ * @requires roleManager
+ * @requires nounManager
+ */
+
 'use strict';
 const Noun = require('./noun');
 const Role = require('./role');
 
 const roleManager = require('./roleManager');
 const nounManager = require('./nounManager');
-
 
 /**
  * Regester a new noun
@@ -30,6 +38,10 @@ exports.role = function(name, after) {
   return role;
 };
 
+/**
+ * Returns the mongoose plugin function.
+ * @see {@link module:plugins/mongoose}
+ */
 exports.mongoosePlugin = require('./mongoosePlugin');
 
 process.nextTick(function() {
