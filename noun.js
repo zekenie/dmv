@@ -1,9 +1,10 @@
 'use strict';
+/**
+ * @class  Noun
+ */
 
 class Noun {
   /**
-   * @constructor
-   * @fileOverview Exports the Noun class
    * @param  {string} name - name of noun
    * @return {noun}        - the created noun
    */
