@@ -41,10 +41,11 @@ exports.role = function(name, after) {
 /**
  * Returns the mongoose plugin function.
  * @see {@link module:plugins/mongoose}
+ * @todo find another way to put mongoose in
  */
-exports.mongoosePlugin = require('./mongoosePlugin');
+// exports.mongoosePlugin = require('./mongoosePlugin');
 
-process.nextTick(function() {
+setTimeout(function() {
   roleManager.getAll().concat(nounManager.getAll())
     .forEach( (instance) => instance.setup() );
-});
+}, 0);
