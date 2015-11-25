@@ -10,7 +10,8 @@
  * @module plugins/angular
  */
 
-const rollManager = require('./index');
+const dmv = require('./index');
+const roleManager = require('./roleManager');
 const angular = require('angular');
 const _ = require('lodash');
 
@@ -46,8 +47,10 @@ angular.module('dmv', [])
           if(next && next.auth) {
             if(!user) {
               $rootScope.$broadcast('NOT_AUTHENTICATED');
+              event.preventDefault();
               return;
             }
+            if(next.auth === true) { return; }
             for(let verb in next.auth) {
               let noun = next.auth[verb];
               if(!user.can(verb, noun)) {

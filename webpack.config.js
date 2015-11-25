@@ -26,7 +26,7 @@ module.exports = {
     ]
   },
   externals: {
-    'lodash': 'lodash',
+    'lodash': '_',
     'angular': 'angular'
   }
 };

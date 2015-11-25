@@ -47,7 +47,7 @@
 	'use strict'
 	// we need to expose the dmv api
 	;
-	module.exports = __webpack_require__(1);
+	window.dmv = __webpack_require__(1);
 	// angular code just needs to run. it will regester module with angular
 	__webpack_require__(8);
 
@@ -356,7 +356,7 @@
 /* 6 */
 /***/ function(module, exports) {
 
-	module.exports = lodash;
+	module.exports = _;
 
 /***/ },
 /* 7 */
@@ -431,7 +431,8 @@
 	 */
 
 	;
-	var rollManager = __webpack_require__(1);
+	var dmv = __webpack_require__(1);
+	var roleManager = __webpack_require__(7);
 	var angular = __webpack_require__(9);
 	var _ = __webpack_require__(6);
 
@@ -465,6 +466,10 @@
 	        if (next && next.auth) {
 	          if (!user) {
 	            $rootScope.$broadcast('NOT_AUTHENTICATED');
+	            event.preventDefault();
+	            return;
+	          }
+	          if (next.auth === true) {
 	            return;
 	          }
 	          for (var verb in next.auth) {

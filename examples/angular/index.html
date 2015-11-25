@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+
+</head>
+<body>
+
+  <div ng-app="ExampleApp">
+    <ui-view></ui-view>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.8/angular.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.10.1/lodash.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.2.15/angular-ui-router.js"></script>
+  <script src="../../browser.js"></script>
+  <script>
+    'use strict';
+    dmv.noun('post', function(post) {
+      post.can('approve');
+      post.authorize('moderator', ['approve']);
+      post.authorize('admin', '*');
+    });
+
+    dmv.role('moderator');
+    dmv.role('admin');
+
+    angular.module('ExampleApp', ['dmv', 'ui.router'])
+      .config(function($stateProvider) {
+        // a state for everyone
+        $stateProvider
+          .state('home', {
+            url: '',
+            auth: false,
+            template: 'everyone look at me'
+          })
+          // a state for users, no permissions required
+          .state('dashboard', {
+            url: '/dash',
+            auth: true,
+            template: 'hey regestered user'
+          })
+          // for this one you need to be able to create posts
+          .state('newpost', {
+            url: '/newpost',
+            auth: {
+              create: 'post'
+            },
+            template: 'this is only for folks who can create posts'
+          });
+      })
+      .factory('User', function(canPlugin) {
+        var User = function(roles, whitelist, blacklist) {
+          this.roles = roles;
+          this.permissionsBlacklist = blacklist;
+          this.permissionsWhitelist = whitelist;
+        };
+
+        canPlugin(User.prototype);
+
+        return User;
+      })
+      .run(function(authConfig, User) {
+        authConfig.setUser(new User(['admin', 'moderator'], [], [{ verb: 'delete', noun: 'user' }]));
+        authConfig.enable();
+      })
+      .run(function($rootScope) {
+        $rootScope.$on('NOT_AUTHENTICATED', function() {
+          console.log('not authenticated fires')
+        });
+        $rootScope.$on('NOT_AUTHORIZED', function() {
+          console.log('not authorized fires')
+        });
+      });
+  </script>
+
+</body>
+</html>
