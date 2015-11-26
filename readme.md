@@ -2,12 +2,12 @@
 
 ## Intro
 
-DMV is a MEAN stack library that lets you define define roles and permissions. It let's you express thoughts like:
+DMV is a MEAN stack library that lets you define roles and permissions. It lets you express thoughts like:
 
 _student_ can *read* **chapter**.
 _teacher_ can *assign* **chapter**.
 
-I like to think about the previous sentance like this
+I like to think about the previous sentence like this
 
 
 ```
@@ -19,7 +19,7 @@ I like to think about the previous sentance like this
 
 ## Practical Example
 
-We use DMV to regester the roles and nouns:
+We use DMV to register the roles and nouns:
 
 ```js
 dmv.role('author');
@@ -80,7 +80,7 @@ mongoose.model('User', userSchema);
 
 ```
 
-To use your user instances can method like this
+You can use your user instance's can method like this
 
 ```js
 
@@ -107,7 +107,7 @@ alex.can('approve', 'post'); // true
 alex.can('create', 'post');  // false
 
 hilary.can('delete', 'post') // true
-hilary.can('aprove', 'post') // true
+hilary.can('approve', 'post') // true
 
 ```
 
@@ -173,7 +173,7 @@ yourModule.factory('YourUserClass', funciton($httpMaybe?, canPlugin) {
 })
 ```
 
-In your login life-cycle you must regester the logged in user with us like this:
+In your login life-cycle you must register the logged in user with us like this:
 
 ```js
 yourModule
@@ -192,7 +192,7 @@ yourModule
   })
 ```
 
-Then you can add a specail `auth` property to your ui-router state defs.
+Then you can add a special `auth` property to your ui-router state definitions.
 
 ```js
 yourModule
@@ -214,7 +214,7 @@ yourModule
   }) 
 ```
 
-The auth property can take a boolean or an object. If you pass `true` to auth it will ensure the user has logged in. An object let's you specify the nouns and verbs that the user must have access to to load the route.
+The auth property can take a boolean or an object. If you pass `true` to auth it will ensure the user has logged in. An object lets you specify the nouns and verbs that the user must have access to to load the route.
 
 Our module will broadcast a `NOT_AUTHORIZED` event on the root scope if a user goes to a route they are not authorized to see. We will broadcast a `NOT_AUTHENTICATED` event if a user that hasn't logged in attempts to see a route that has a truthy auth property.
 
