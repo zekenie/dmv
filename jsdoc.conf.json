@@ -2,7 +2,8 @@
   "source": {
     "include":[
       "./"
-    ]
+    ],
+    "exclude": ["./browser.js", "./bundle.js", "./examples"]
   },
   "plugins": ["plugins/markdown"]
 }
