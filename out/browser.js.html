@@ -1,4 +1,32 @@
-/******/ (function(modules) { // webpackBootstrap
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: browser.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: browser.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 
@@ -124,7 +152,7 @@
 
 	;
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -165,9 +193,9 @@
 	     */
 
 	  }, {
-	    key: 'verb',
-	    value: function verb(_verb) {
-	      this.verbs.add(_verb);
+	    key: 'can',
+	    value: function can(verb) {
+	      this.verbs.add(verb);
 	    }
 
 	    /**
@@ -215,7 +243,7 @@
 	  }, {
 	    key: 'checkAuthorization',
 	    value: function checkAuthorization(role, verb) {
-	      return !!this.permissions[role] && this.permissions[role].has(verb);
+	      return !!this.permissions[role] &amp;&amp; this.permissions[role].has(verb);
 	    }
 	  }]);
 
@@ -266,7 +294,7 @@
 	 */
 	;
 
-	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i &lt; props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -425,7 +453,7 @@
 	 * @example
 	 * .factory('yourLoginFactory', function(authConfig) {
 	 *   // on login
-	 *   authConfig.setUser(yourUser) // <- YOUR USER MUST HAVE CAN METHOD
+	 *   authConfig.setUser(yourUser) // &lt;- YOUR USER MUST HAVE CAN METHOD
 	 * })
 	 * @module plugins/angular
 	 */
@@ -450,19 +478,20 @@
 	      }
 	    });
 	  };
-	}).factory('authConfig', ["$rootScope", "$injector", function ($rootScope, $injector) {
-
-	  var userGetterMethod = function userGetterMethod() {};
-	  var _getUser = function _getUser() {
-	    return $injector.invoke(userGetterMethod);
-	  };
+	}).factory('authConfig', ['$rootScope', function ($rootScope) {
+	  var user = undefined;
 
 	  return {
-	    getUser: function getUser(fn) {
-	      userGetterMethod = fn;
+	    setUser: function setUser(u) {
+	      if (u &amp;&amp; u.can &amp;&amp; typeof u.can === 'function') {
+	        user = u;
+	        return;
+	      }
+	      throw 'user must have a can method';
+	    },
+	    enable: function enable() {
 	      $rootScope.$on('$stateChangeStart', function (event, next) {
-	        var user = _getUser();
-	        if (next && next.auth) {
+	        if (next &amp;&amp; next.auth) {
 	          if (!user) {
 	            $rootScope.$broadcast('NOT_AUTHENTICATED');
 	            event.preventDefault();
@@ -492,4 +521,26 @@
 	module.exports = angular;
 
 /***/ }
-/******/ ]);
+/******/ ]);</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-main.html">main</a></li><li><a href="module-plugins_angular.html">plugins/angular</a></li><li><a href="module-plugins_express.html">plugins/express</a></li><li><a href="module-plugins_mongoose.html">plugins/mongoose</a></li><li><a href="module-RoleManager.html">RoleManager</a></li></ul><h3>Classes</h3><ul><li><a href="module-main-Noun.html">Noun</a></li><li><a href="module-main-Role.html">Role</a></li><li><a href="Noun.html">Noun</a></li><li><a href="Role.html">Role</a></li></ul><h3>Mixins</h3><ul><li><a href="module-plugins_mongoose-mongoosePlugin.html">mongoosePlugin</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Thu Nov 26 2015 14:04:19 GMT-0600 (CST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

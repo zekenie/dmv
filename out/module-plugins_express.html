@@ -115,10 +115,10 @@
     <h5>Example</h5>
     
     <pre class="prettyprint"><code>const dmv = require('dmv');
-const can  = dmv.expressMiddleware.can;
+const permits  = dmv.expressMiddleware.permits;
 const hasRole  = dmv.expressMiddleware.hasRole;
 
-router.use(can('eat', 'bricks'));
+router.use(permits('eat', 'bricks'));
 router.use('/bricks/:id/eat');
 
 // less robust!
@@ -144,6 +144,72 @@ router.use('/bricks')
     
 
     
+        <h3 class="subsection-title">Members</h3>
+
+        
+            
+<h4 class="name" id="~permitsFactory"><span class="type-signature">(inner, constant) </span>permitsFactory<span class="type-signature"></span></h4>
+
+
+
+
+<div class="description">
+    <p>returns a function that is like permits but for an explicit noun</p>
+</div>
+
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="expressMiddleware.js.html">expressMiddleware.js</a>, <a href="expressMiddleware.js.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+        
+    
 
     
         <h3 class="subsection-title">Methods</h3>
@@ -153,14 +219,14 @@ router.use('/bricks')
 
     
 
-    <h4 class="name" id="~can"><span class="type-signature">(inner) </span>can<span class="signature">(verb, noun)</span><span class="type-signature"> &rarr; {middleware}</span></h4>
+    <h4 class="name" id=".user"><span class="type-signature">(static) </span>user<span class="signature">(cb)</span><span class="type-signature"></span></h4>
 
     
 
 
 
 <div class="description">
-    <p>middleware factory to determine if req.user has permission to noun a verb</p>
+    <p>Function to set method for pulling user off req or res</p>
 </div>
 
 
@@ -196,13 +262,144 @@ router.use('/bricks')
 
         <tr>
             
-                <td class="name"><code>verb</code></td>
+                <td class="name"><code>cb</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">function</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>your function to return user</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="expressMiddleware.js.html">expressMiddleware.js</a>, <a href="expressMiddleware.js.html#line35">line 35</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~getUser"><span class="type-signature">(inner) </span>getUser<span class="signature">(req, res)</span><span class="type-signature"> &rarr; {User}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>Default function to pull user off request object</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>req</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">Request</span>
 
 
             
@@ -219,13 +416,13 @@ router.use('/bricks')
 
         <tr>
             
-                <td class="name"><code>noun</code></td>
+                <td class="name"><code>res</code></td>
             
 
             <td class="type">
             
                 
-<span class="param-type">string</span>
+<span class="param-type">Response</span>
 
 
             
@@ -276,7 +473,7 @@ router.use('/bricks')
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="expressMiddleware.js.html">expressMiddleware.js</a>, <a href="expressMiddleware.js.html#line28">line 28</a>
+        <a href="expressMiddleware.js.html">expressMiddleware.js</a>, <a href="expressMiddleware.js.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -310,7 +507,7 @@ router.use('/bricks')
     </dt>
     <dd>
         
-<span class="param-type">middleware</span>
+<span class="param-type">User</span>
 
 
     </dd>
@@ -448,7 +645,179 @@ router.use('/bricks')
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="expressMiddleware.js.html">expressMiddleware.js</a>, <a href="expressMiddleware.js.html#line44">line 44</a>
+        <a href="expressMiddleware.js.html">expressMiddleware.js</a>, <a href="expressMiddleware.js.html#line74">line 74</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5>Returns:</h5>
+
+        
+
+
+<dl>
+    <dt>
+        Type
+    </dt>
+    <dd>
+        
+<span class="param-type">middleware</span>
+
+
+    </dd>
+</dl>
+
+    
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="~permits"><span class="type-signature">(inner) </span>permits<span class="signature">(verb, noun)</span><span class="type-signature"> &rarr; {middleware}</span></h4>
+
+    
+
+
+
+<div class="description">
+    <p>middleware factory to determine if req.user has permission to noun a verb</p>
+</div>
+
+
+
+
+
+
+
+
+
+    <h5>Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>verb</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>noun</code></td>
+            
+
+            <td class="type">
+            
+                
+<span class="param-type">string</span>
+
+
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+<dl class="details">
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="expressMiddleware.js.html">expressMiddleware.js</a>, <a href="expressMiddleware.js.html#line46">line 46</a>
     </li></ul></dd>
     
 
@@ -508,13 +877,13 @@ router.use('/bricks')
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-main.html">main</a></li><li><a href="module-plugins_express.html">plugins/express</a></li><li><a href="module-plugins_mongoose.html">plugins/mongoose</a></li><li><a href="module-RoleManager.html">RoleManager</a></li></ul><h3>Classes</h3><ul><li><a href="Noun.html">Noun</a></li><li><a href="Role.html">Role</a></li></ul><h3>Mixins</h3><ul><li><a href="module-plugins_mongoose-mongoosePlugin.html">mongoosePlugin</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Modules</h3><ul><li><a href="module-main.html">main</a></li><li><a href="module-plugins_angular.html">plugins/angular</a></li><li><a href="module-plugins_express.html">plugins/express</a></li><li><a href="module-plugins_mongoose.html">plugins/mongoose</a></li><li><a href="module-RoleManager.html">RoleManager</a></li></ul><h3>Classes</h3><ul><li><a href="module-main-Noun.html">Noun</a></li><li><a href="module-main-Role.html">Role</a></li><li><a href="Noun.html">Noun</a></li><li><a href="Role.html">Role</a></li></ul><h3>Mixins</h3><ul><li><a href="module-plugins_mongoose-mongoosePlugin.html">mongoosePlugin</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Thu Nov 19 2015 11:10:31 GMT-0600 (CST)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.0-dev</a> on Thu Nov 26 2015 14:04:19 GMT-0600 (CST)
 </footer>
 
 <script> prettyPrint(); </script>

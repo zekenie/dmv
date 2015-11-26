@@ -4,10 +4,10 @@
  * @fileOverview This module exports a function which creates express midddleware to test if a user has certain permissions. It assumes that there is a `user` property defined on the `req` object. 
  * @example
  * const dmv = require('dmv');
- * const can  = dmv.expressMiddleware.can;
+ * const permits  = dmv.expressMiddleware.permits;
  * const hasRole  = dmv.expressMiddleware.hasRole;
  *
- * router.use(can('eat', 'bricks'));
+ * router.use(permits('eat', 'bricks'));
  * router.use('/bricks/:id/eat');
  *
  * // less robust!
@@ -43,7 +43,7 @@ exports.user = function(cb) {
  * @param  {string} noun
  * @return {middleware}
  */
-const can = exports.can = function(verb, noun) {
+const permits = exports.permits = function(verb, noun) {
   return function(req, res, next) {
     const user = getUser(req, res);
     if(user.can(verb, noun)) { return next(); }
@@ -52,6 +52,17 @@ const can = exports.can = function(verb, noun) {
     next(err);
   };
 };
+
+/**
+ * returns a function that is like permits but for an explicit noun
+ * @param {String} noun to bind
+ * @returns {Function} A version of permits that is only for a specific noun
+ */
+const permitsFactory = exports.permitsFactory = function(noun) {
+  return function(verb) {
+    return permits(verb, noun);
+  }
+}
 
 /**
  * middleware factory to determine if req.user has a role

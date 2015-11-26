@@ -33,7 +33,7 @@ angular.module('dmv', [])
   })
   .factory('authConfig', function($rootScope, $injector) {
 
-    const userGetterMethod = function() {};
+    let userGetterMethod = function() {};
     const getUser = function() {
       return $injector.invoke(userGetterMethod);
     };

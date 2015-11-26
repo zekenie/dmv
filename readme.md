@@ -26,19 +26,19 @@ dmv.role('author');
 dmv.role('moderator');
 dmv.role('admin');
 
-dmv.noun('post', function(postNoun) {
+dmv.noun('article', function(articleNoun) {
   // by default the noun has crud verbs
   // we're adding the approve verb here
-  postNoun.verb('approve');
+  articleNoun.verb('approve');
 
   // we say that admins can do all verbs
-  postNoun.authorize('admin', '*');
+  articleNoun.authorize('admin', '*');
 
   // moderators can 
-  postNoun.authorize('moderator', ['approve', 'read']);
+  articleNoun.authorize('moderator', ['approve', 'read']);
 
   // authors can
-  postNoun.authorize('author', ['create', 'update'])
+  articleNoun.authorize('author', ['create', 'update'])
 
 });
 
@@ -99,15 +99,15 @@ const hilary = new User({
   name: 'Hilary'
 });
 
-sarah.can('create', 'post'); // => true
-sarah.can('update', 'post'); // => true
-sarah.can('delete', 'post'); // => false
+sarah.can('create', 'article'); // => true
+sarah.can('update', 'article'); // => true
+sarah.can('delete', 'article'); // => false
 
-alex.can('approve', 'post'); // true
-alex.can('create', 'post');  // false
+alex.can('approve', 'article'); // true
+alex.can('create', 'article');  // false
 
-hilary.can('delete', 'post') // true
-hilary.can('approve', 'post') // true
+hilary.can('delete', 'article') // true
+hilary.can('approve', 'article') // true
 
 ```
 
@@ -118,19 +118,19 @@ hilary.can('approve', 'post') // true
 const dmv = require('dmv');
 const auth = dmv.expressMiddleware
 
-// posts router
+// articles router
 
-// everyone can read all posts
+// everyone can read all articles
 router.get('/', controller.index);
-router.post('/', auth.can('create', 'post'), controller.create);
+router.post('/', auth.permits('create', 'article'), controller.create);
 
 router.use('/:id', controller.load);
 
 router.get('/:id', controller.read);
 
 
-router.put('/:id', auth.can('update', 'post'), controller.update);
-router.delete('/:id', auth.can('delete', 'post'), controller.delete);
+router.put('/:id', auth.permits('update', 'article'), controller.update);
+router.delete('/:id', auth.permits('delete', 'article'), controller.delete);
 ```
 
 Dmv's express middleware calls the `can` method on the `req.user` by default. If your application doesn't have a `req.user`, you can define another function to return a user object.
@@ -139,6 +139,22 @@ Dmv's express middleware calls the `can` method on the `req.user` by default. If
 auth.user(function(req, res) {
   return req.yourOtherUserObject;
 });
+```
+
+If you have a router that really only concerns itself with one noun (like above), you can use `permitsFactory` to generate a version of permits that only works for one noun. That would look like this.
+
+```js
+const dmv = require('dmv');
+const auth = dmv.expressMiddleware
+const permits = auth.permitsFactory('article')
+
+// articles router
+
+// everyone can read all articles
+router.get('/', controller.index);
+router.post('/', permits('create'), controller.create);
+
+// ...
 ```
 
 ### Angular
@@ -192,16 +208,16 @@ Then you can add a special `auth` property to your ui-router state definitions.
 yourModule
   .config(function($stateProvider) {
     $stateProvider
-      .state('posts', {
-        url: '/posts',
-        template: 'everyone can see these great posts',
+      .state('articles', {
+        url: '/articles',
+        template: 'everyone can see these great articles',
         auth: false // you could omit this, it just documents here
       })
-      .state('new_post', {
-        url: '/newpost',
+      .state('new_article', {
+        url: '/newarticle',
         template: 'form only for those who can write',
         auth: {
-          create: 'post'
+          create: 'article'
         }
       });
 
