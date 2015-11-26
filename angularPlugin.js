@@ -50,6 +50,13 @@ angular.module('dmv', [])
               return;
             }
             if(next.auth === true) { return; }
+            if(typeof next.auth === 'function') {
+              if(!next.auth.call(event, user, next)) {
+                event.preventDefault();
+                $rootScope.$broadcast('NOT_AUTHORIZED');
+              }
+              return;
+            }
             for(let verb in next.auth) {
               let noun = next.auth[verb];
               if(!user.can(verb, noun)) {

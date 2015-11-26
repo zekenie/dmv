@@ -224,7 +224,7 @@ yourModule
   }) 
 ```
 
-The auth property can take a boolean or an object. If you pass `true` to auth it will ensure the user has logged in. An object lets you specify the nouns and verbs that the user must have access to to load the route.
+The auth property can take a boolean, function or an object. If you pass `true` to auth it will ensure the user has logged in. An object lets you specify the nouns and verbs that the user must have access to to load the route. You can also pass auth a function. If you return true from that function, the user will be allowed to enter the state. The function's `this` is bound to the state change event. It is passed the `user` object and the `next` state.
 
 Our module will broadcast a `NOT_AUTHORIZED` event on the root scope if a user goes to a route they are not authorized to see. We will broadcast a `NOT_AUTHENTICATED` event if a user that hasn't logged in attempts to see a route that has a truthy auth property.
 
