@@ -133,6 +133,14 @@ router.put('/:id', auth.can('update', 'post'), controller.update);
 router.delete('/:id', auth.can('delete', 'post'), controller.delete);
 ```
 
+Dmv's express middleware calls the `can` method on the `req.user` by default. If your application doesn't have a `req.user`, you can define another function to return a user object.
+
+```js
+auth.user(function(req, res) {
+  return req.yourOtherUserObject;
+});
+```
+
 ### Angular
 
 Note: we assume you use ui-router for now.

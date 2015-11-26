@@ -19,6 +19,24 @@
  */
 
 /**
+ * Default function to pull user off request object
+ * @param  {Request} req
+ * @param  {Response} res
+ * @return {User}
+ */
+let getUser = function(req, res) {
+  return req.user;
+};
+
+/**
+ * Function to set method for pulling user off req or res
+ * @param  {Function} cb your function to return user
+ */
+exports.user = function(cb) {
+  getUser = cb;
+};
+
+/**
  * middleware factory to determine if req.user has permission to noun a verb
  * @function
  * @param  {string} verb
@@ -27,7 +45,8 @@
  */
 const can = exports.can = function(verb, noun) {
   return function(req, res, next) {
-    if(req.user.can(verb, noun)) { return next(); }
+    const user = getUser(req, res);
+    if(user.can(verb, noun)) { return next(); }
     const err = new Error('not authorized');
     err.status(401);
     next(err);
@@ -43,7 +62,8 @@ const can = exports.can = function(verb, noun) {
  */
 const hasRole = exports.hasRole = function(role) {
   return function(req, res, next) {
-    if(req.user.hasRole(role)) { return next(); }
+    const user = getUser(req, res);
+    if(user.hasRole(role)) { return next(); }
     const err = new Error('not authorized');
     err.status(401);
     next(err);
