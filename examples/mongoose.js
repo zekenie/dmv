@@ -5,7 +5,7 @@ const dmv = require('../');
 
 // Defining the nouns
 dmv.noun('cat', function(kitten) {
-  kitten.can('pet');
+  kitten.verb('pet');
   kitten.authorize('owner', ['pet']);
   kitten.authorize('god', '*'); // will have create, read, update, delete, pet
 });

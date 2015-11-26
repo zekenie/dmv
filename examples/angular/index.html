@@ -16,7 +16,7 @@
   <script>
     'use strict';
     dmv.noun('post', function(post) {
-      post.can('approve');
+      post.verb('approve');
       post.authorize('moderator', ['approve']);
       post.authorize('admin', '*');
     });

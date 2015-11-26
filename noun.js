@@ -28,7 +28,7 @@ class Noun {
    * Adds verb to the set of posible verbs that can be authorized. For example, `post.can('like')` would add the verb 'like' to a noun 'post'
    * @param  {string} verb
    */
-  can(verb) {
+  verb(verb) {
     this.verbs.add(verb);
   }
 

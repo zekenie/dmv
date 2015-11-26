@@ -29,7 +29,7 @@ dmv.role('admin');
 dmv.noun('post', function(postNoun) {
   // by default the noun has crud verbs
   // we're adding the approve verb here
-  postNoun.can('approve');
+  postNoun.verb('approve');
 
   // we say that admins can do all verbs
   postNoun.authorize('admin', '*');
@@ -43,7 +43,7 @@ dmv.noun('post', function(postNoun) {
 });
 
 dmv.noun('comment', function(commentNoun) {
-  commentNoun.can('approve');
+  commentNoun.verb('approve');
 
   // we say that admins can do all verbs
   commentNoun.authorize('admin', '*');
