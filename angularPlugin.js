@@ -31,19 +31,18 @@ angular.module('dmv', [])
       });
     };
   })
-  .factory('authConfig', ['$rootScope', function($rootScope) {
-    let user;
+  .factory('authConfig', function($rootScope, $injector) {
+
+    const userGetterMethod = function() {};
+    const getUser = function() {
+      return $injector.invoke(userGetterMethod);
+    };
 
     return {
-      setUser: function(u) {
-        if(u && u.can && typeof u.can === 'function') {
-          user = u;
-          return;
-        }
-        throw 'user must have a can method';
-      },
-      enable: function() {
+      getUser: function(fn) {
+        userGetterMethod = fn;
         $rootScope.$on('$stateChangeStart', function(event, next) {
+          const user = getUser();
           if(next && next.auth) {
             if(!user) {
               $rootScope.$broadcast('NOT_AUTHENTICATED');
@@ -64,4 +63,4 @@ angular.module('dmv', [])
       }
     };
 
-  }]);
+  });

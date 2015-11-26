@@ -60,8 +60,13 @@
         return User;
       })
       .run(function(authConfig, User) {
-        authConfig.setUser(new User(['admin', 'moderator'], [], [{ verb: 'delete', noun: 'user' }]));
-        authConfig.enable();
+
+        const u = new User(['admin', 'moderator'], [], [{ verb: 'delete', noun: 'user' }]);
+
+        authConfig.getUser(function() {
+          return u;
+        });
+
       })
       .run(function($rootScope) {
         $rootScope.$on('NOT_AUTHENTICATED', function() {

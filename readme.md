@@ -173,23 +173,17 @@ yourModule.factory('YourUserClass', funciton($httpMaybe?, canPlugin) {
 })
 ```
 
-In your login life-cycle you must register the logged in user with us like this:
+You need to tell dmv how to find your logged in user. We've exposed a method called `getUser` on our `authConfig` factory. You can inject your own angular services. You just need to return your
 
 ```js
 yourModule
   .run(function(authConfig) {
-    authConfig.enable(); // <-- hooks into ui-router events
+    // Note, ng-annotate and others won't annotate the dependencies for this method. So if you minify in your build process, you should annotate your own dependencies.
+    authConfig.getUser(function(YourUserService, YourAuthService) {
+      return YouAuthService.getLoggedInUser();
+    })
   })
-  .controller('yourLoginCtrl', function($state, yourAuth, authConfig) {
-
-    $scope.login = function() {
-      yourAuth.checkWithServer()
-        .then(function(yourUserInstance) {
-          // NOTE: we assume `yourUserInstance` is an instance of the class we plugged into above
-          authConfig.setUser(yourUserInstance);
-        });
-    }
-  })
+  
 ```
 
 Then you can add a special `auth` property to your ui-router state definitions.
