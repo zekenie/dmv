@@ -12,7 +12,7 @@ class Noun {
     this.name = name;
     this.verbs = new Set();
     this.permissions = {};
-    ['create','read','update','delete'].forEach( (v) => this.can(v), this);
+    ['create','read','update','delete'].forEach( (v) => this.verb(v), this);
   }
 
   /**
@@ -36,7 +36,7 @@ class Noun {
    * Removes a verb from the set of possible verbs. Useful for removing default crud.
    * @param  {string} verb
    */
-  cannot(verb) {
+  removeVerb(verb) {
     this.verbs.delete(verb);
   }
 

@@ -143,7 +143,7 @@
 	    this.verbs = new Set();
 	    this.permissions = {};
 	    ['create', 'read', 'update', 'delete'].forEach(function (v) {
-	      return _this.can(v);
+	      return _this.verb(v);
 	    }, this);
 	  }
 
@@ -176,8 +176,8 @@
 	     */
 
 	  }, {
-	    key: 'cannot',
-	    value: function cannot(verb) {
+	    key: 'removeVerb',
+	    value: function removeVerb(verb) {
 	      this.verbs.delete(verb);
 	    }
 
