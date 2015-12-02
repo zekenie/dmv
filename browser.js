@@ -45,9 +45,10 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict'
+
 	// we need to expose the dmv api
 	;
-	window.dmv = __webpack_require__(1);
+	window.dmv = module.exports = __webpack_require__(1);
 	// angular code just needs to run. it will regester module with angular
 	__webpack_require__(8);
 
