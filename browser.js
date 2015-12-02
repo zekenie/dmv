@@ -431,9 +431,9 @@
 	 */
 
 	;
-	var dmv = __webpack_require__(1);
+	var dmv = __webpack_require__(9);
 	var roleManager = __webpack_require__(7);
-	var angular = __webpack_require__(9);
+	var angular = __webpack_require__(12);
 	var _ = __webpack_require__(6);
 
 	angular.module('dmv', []).factory('canPlugin', function () {
@@ -494,6 +494,173 @@
 
 /***/ },
 /* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	module.exports = __webpack_require__(1);
+
+	module.exports.mongoosePlugin = __webpack_require__(10);
+	module.exports.expressMiddleware = __webpack_require__(11);
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict'
+
+	/**
+	 * @description  This is a [mongoose plugin](http://mongoosejs.com/docs/plugins.html).
+	 *   It exports a function which modifies a mongoose schema.
+	 *   It adds 3 paths:
+	 *     - roles
+	 *     - permissionsWhitelist
+	 *     - PermissionsBlacklist
+	 *
+	 *   It is meant to be used on a sort of user model.
+	 * @module plugins/mongoose
+	 * @requires  roleManager
+	 * @requires lodash
+	 */
+
+	;
+	var roleManager = __webpack_require__(7);
+	var _ = __webpack_require__(6);
+
+	/**
+	 * Checks if a user has the ability to perform an action on a noun
+	 * @memberOf plugins/mongoose
+	 * @param  {string} verb
+	 * @param  {string} noun
+	 * @return {boolean}
+	 */
+	var can = function can(verb, noun) {
+	  if (_.where(this.permissionsWhitelist, { verb: verb, noun: noun }).length) {
+	    return true;
+	  } else if (_.where(this.permissionsBlacklist, { verb: verb, noun: noun }).length) {
+	    return false;
+	  } else {
+	    return roleManager.can(this.roles, verb, noun);
+	  }
+	};
+
+	/**
+	 * @classDesc Mongoose plugin to provide roles to users
+	 * @mixin
+	 */
+	var mongoosePlugin = module.exports = function (schema) {
+	  /**
+	   * @lends  plugins/mongoose
+	   */
+
+	  var permissionsArray = [{
+	    noun: String,
+	    verb: String
+	  }];
+
+	  schema.add({
+	    roles: [String],
+	    permissionsWhitelist: permissionsArray,
+	    permissionsBlacklist: permissionsArray
+	  });
+
+	  schema.methods.can = can;
+	};
+
+/***/ },
+/* 11 */
+/***/ function(module, exports) {
+
+	'use strict'
+
+	/**
+	 * @fileOverview This module exports a function which creates express midddleware to test if a user has certain permissions. It assumes that there is a `user` property defined on the `req` object. 
+	 * @example
+	 * const dmv = require('dmv');
+	 * const permits  = dmv.expressMiddleware.permits;
+	 * const hasRole  = dmv.expressMiddleware.hasRole;
+	 *
+	 * router.use(permits('eat', 'bricks'));
+	 * router.use('/bricks/:id/eat');
+	 *
+	 * // less robust!
+	 * router.use(hasRole('mason'));
+	 * router.use('/bricks')
+	 *
+	 * // If the req.user doesn't have a role which gives it permission to eat bricks, a 401 will be sent.
+	 * @module  plugins/express
+	 */
+
+	/**
+	 * Default function to pull user off request object
+	 * @param  {Request} req
+	 * @param  {Response} res
+	 * @return {User}
+	 */
+	;
+	var getUser = function getUser(req, res) {
+	  return req.user;
+	};
+
+	/**
+	 * Function to set method for pulling user off req or res
+	 * @param  {Function} cb your function to return user
+	 */
+	exports.user = function (cb) {
+	  getUser = cb;
+	};
+
+	/**
+	 * middleware factory to determine if req.user has permission to noun a verb
+	 * @function
+	 * @param  {string} verb
+	 * @param  {string} noun
+	 * @return {middleware}
+	 */
+	var permits = exports.permits = function (verb, noun) {
+	  return function (req, res, next) {
+	    var user = getUser(req, res);
+	    if (user.can(verb, noun)) {
+	      return next();
+	    }
+	    var err = new Error('not authorized');
+	    err.status(401);
+	    next(err);
+	  };
+	};
+
+	/**
+	 * returns a function that is like permits but for an explicit noun
+	 * @param {String} noun to bind
+	 * @returns {Function} A version of permits that is only for a specific noun
+	 */
+	var permitsFactory = exports.permitsFactory = function (noun) {
+	  return function (verb) {
+	    return permits(verb, noun);
+	  };
+	};
+
+	/**
+	 * middleware factory to determine if req.user has a role
+	 * @function
+	 * @param  {string} verb
+	 * @param  {string} noun
+	 * @return {middleware}
+	 */
+	var hasRole = exports.hasRole = function (role) {
+	  return function (req, res, next) {
+	    var user = getUser(req, res);
+	    if (user.hasRole(role)) {
+	      return next();
+	    }
+	    var err = new Error('not authorized');
+	    err.status(401);
+	    next(err);
+	  };
+	};
+
+/***/ },
+/* 12 */
 /***/ function(module, exports) {
 
 	module.exports = angular;
