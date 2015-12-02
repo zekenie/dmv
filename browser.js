@@ -87,6 +87,14 @@
 	};
 
 	/**
+	 * Gets all regestered nouns. Must be called after setup
+	 * @return {Array<Noun>}
+	 */
+	exports.getAllNouns = function () {
+	  return nounManager.getAll();
+	};
+
+	/**
 	 * Regester a new role
 	 * @param  {string} name - role name
 	 * @param  {function} after - fn to run after setup. Passed role instance. 
