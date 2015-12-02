@@ -10,7 +10,7 @@
  * @module plugins/angular
  */
 
-const dmv = require('./index');
+const dmv = require('./dmv');
 const roleManager = require('./roleManager');
 const angular = require('angular');
 const _ = require('lodash');

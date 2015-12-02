@@ -48,7 +48,7 @@ const permits = exports.permits = function(verb, noun) {
     const user = getUser(req, res);
     if(user.can(verb, noun)) { return next(); }
     const err = new Error('not authorized');
-    err.status(401);
+    err.status(403);
     next(err);
   };
 };
@@ -61,8 +61,8 @@ const permits = exports.permits = function(verb, noun) {
 const permitsFactory = exports.permitsFactory = function(noun) {
   return function(verb) {
     return permits(verb, noun);
-  }
-}
+  };
+};
 
 /**
  * middleware factory to determine if req.user has a role
@@ -76,7 +76,7 @@ const hasRole = exports.hasRole = function(role) {
     const user = getUser(req, res);
     if(user.hasRole(role)) { return next(); }
     const err = new Error('not authorized');
-    err.status(401);
+    err.status(403);
     next(err);
   };
 };
