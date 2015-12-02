@@ -48,7 +48,8 @@
 
 	// we need to expose the dmv api
 	;
-	window.dmv = module.exports = __webpack_require__(1);
+	window.dmv = __webpack_require__(1);
+	module.exports = window.dmv;
 	// angular code just needs to run. it will regester module with angular
 	__webpack_require__(8);
 
