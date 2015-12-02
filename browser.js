@@ -545,6 +545,25 @@
 	};
 
 	/**
+	 * Determines if user has role or roles
+	 * @param  {String|Array}  r role
+	 * @return {Boolean}
+	 */
+	var hasRole = function hasRole(r) {
+	  if (typeof r === 'string') {
+	    return this.roles.indexOf(r) !== -1;
+	  } else if (Array.isArray(r)) {
+	    var hasAllRoles = true;
+	    r.forEach(function (role) {
+	      if (this.roles.indexOf(role) === -1) {
+	        hasAllRoles = false;
+	      }
+	    }, this);
+	    return hasAllRoles;
+	  }
+	};
+
+	/**
 	 * @classDesc Mongoose plugin to provide roles to users
 	 * @mixin
 	 */
@@ -565,6 +584,7 @@
 	  });
 
 	  schema.methods.can = can;
+	  schema.methods.hasRole = hasRole;
 	};
 
 /***/ },
