@@ -19,6 +19,19 @@ angular.module('dmv', [])
   .factory('canPlugin', function() {
     return function(proto) {
       angular.extend(proto, {
+        hasRole: function(r) {
+          if (typeof r === 'string'){
+            return this.roles.indexOf(r) !== -1;
+          } else if (Array.isArray(r)) {
+            let hasAllRoles = true;
+            r.forEach(function (role) {
+              if (this.roles.indexOf(role) === -1){
+                hasAllRoles = false;
+              }
+            }, this);
+            return hasAllRoles;
+          }
+        },
         can: function(verb, noun) {
           if(_.where(this.permissionsWhitelist, { verb, noun }).length) {
             return true;
