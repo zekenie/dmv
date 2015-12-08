@@ -1,7 +1,11 @@
 {
   "name": "dmv",
   "version": "1.0.0",
-  "description": "",
+  "description": "A MEAN stack role/permission management system",
+  "author": { "name" : "Zeke Nierenberg"
+, "email" : "hampzan09@gmail.com"
+, "url" : "http://zeke.io"
+},
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
