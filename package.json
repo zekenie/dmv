@@ -6,6 +6,7 @@
 , "email" : "hampzan09@gmail.com"
 , "url" : "http://zeke.io"
 },
+  "repository": "https://github.com/zekenie/dmv",
   "main": "index.js",
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
