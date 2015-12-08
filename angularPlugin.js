@@ -54,6 +54,11 @@ angular.module('dmv', [])
     return {
       getUser: function(fn) {
         userGetterMethod = fn;
+
+        $rootScope.can = (verb, noun) => getUser().can(verb, noun);
+        $rootScope.hasRole = role => getUser().hasRole(role);
+
+
         $rootScope.$on('$stateChangeStart', function(event, next) {
           const user = getUser();
           if(next && next.auth) {
