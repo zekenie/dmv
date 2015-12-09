@@ -76,7 +76,7 @@ const hasRole = exports.hasRole = function(role) {
     const user = getUser(req, res);
     if(user.hasRole(role)) { return next(); }
     const err = new Error('not authorized');
-    err.status(403);
+    err.status = 403;
     next(err);
   };
 };

@@ -442,6 +442,19 @@
 	angular.module('dmv', []).factory('canPlugin', function () {
 	  return function (proto) {
 	    angular.extend(proto, {
+	      hasRole: function hasRole(r) {
+	        if (typeof r === 'string') {
+	          return this.roles.indexOf(r) !== -1;
+	        } else if (Array.isArray(r)) {
+	          var hasAllRoles = true;
+	          r.forEach(function (role) {
+	            if (this.roles.indexOf(role) === -1) {
+	              hasAllRoles = false;
+	            }
+	          }, this);
+	          return hasAllRoles;
+	        }
+	      },
 	      can: function can(verb, noun) {
 	        if (_.where(this.permissionsWhitelist, { verb: verb, noun: noun }).length) {
 	          return true;
@@ -463,6 +476,14 @@
 	  return {
 	    getUser: function getUser(fn) {
 	      userGetterMethod = fn;
+
+	      $rootScope.can = function (verb, noun) {
+	        return _getUser().can(verb, noun);
+	      };
+	      $rootScope.hasRole = function (role) {
+	        return _getUser().hasRole(role);
+	      };
+
 	      $rootScope.$on('$stateChangeStart', function (event, next) {
 	        var user = _getUser();
 	        if (next && next.auth) {
