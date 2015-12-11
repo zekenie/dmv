@@ -96,6 +96,9 @@
 	  return nounManager.getAll();
 	};
 
+	exports.getNoun = nounManager.get.bind(nounManager);
+	exports.getRole = roleManager.get.bind(roleManager);
+
 	/**
 	 * Regester a new role
 	 * @param  {string} name - role name
