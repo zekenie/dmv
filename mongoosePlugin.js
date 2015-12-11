@@ -1,5 +1,7 @@
 'use strict';
 
+const permissionSchema = require('./permissionSchema');
+
 /**
  * @description  This is a [mongoose plugin](http://mongoosejs.com/docs/plugins.html).
  *   It exports a function which modifies a mongoose schema.
@@ -32,7 +34,7 @@ const can = function(verb, noun) {
   } else {
     return roleManager.can(this.roles, verb, noun);
   }
-}
+};
 
 /**
  * Determines if user has role or roles
@@ -62,15 +64,10 @@ const mongoosePlugin = module.exports = function(schema) {
    * @lends  plugins/mongoose
    */
 
-  const permissionsArray = [{
-    noun: String,
-    verb: String
-  }];
-
   schema.add({
     roles: [String],
-    permissionsWhitelist: permissionsArray,
-    permissionsBlacklist: permissionsArray
+    permissionsWhitelist: [permissionSchema],
+    permissionsBlacklist: [permissionSchema]
   });
 
   schema.methods.can = can;
