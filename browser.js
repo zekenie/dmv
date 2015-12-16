@@ -82,6 +82,9 @@
 	 */
 	exports.noun = function (name, after) {
 	  var noun = nounManager.get(name) || nounManager.set(name, new Noun(name));
+	  if (this.setupRan) {
+	    noun.setupRan = true;
+	  }
 	  if (after) {
 	    noun._afterSetup(after);
 	  }
@@ -107,6 +110,9 @@
 	 */
 	exports.role = function (name, after) {
 	  var role = roleManager.get(name) || roleManager.set(name, new Role(name));
+	  if (this.setupRan) {
+	    role.setupRan = true;
+	  }
 	  if (after) {
 	    role._afterSetup(after);
 	  }
@@ -114,9 +120,12 @@
 	};
 
 	setTimeout(function () {
-	  roleManager.getAll().concat(nounManager.getAll()).forEach(function (instance) {
+	  var entities = roleManager.getAll().concat(nounManager.getAll());
+
+	  entities.forEach(function (instance) {
 	    return instance.setup();
 	  });
+	  exports.setupRan = true;
 	}, 0);
 
 /***/ },
@@ -247,6 +256,9 @@
 	   * @param  {Function} fn will be passed insnatce
 	   */
 	  klass.prototype._afterSetup = function (fn) {
+	    if (this.setupRan) {
+	      fn.call(this, this);
+	    }
 	    this._afterSetupFns.push(fn);
 	  };
 
@@ -259,6 +271,7 @@
 	    this._afterSetupFns.forEach(function (fn) {
 	      return fn.call(_this, _this);
 	    }, this);
+	    this.setupRan = true;
 	  };
 	};
 

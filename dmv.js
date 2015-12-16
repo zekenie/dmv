@@ -22,6 +22,7 @@ const nounManager = require('./nounManager');
  */
 exports.noun = function(name, after) {
   let noun = nounManager.get(name) || nounManager.set(name, new Noun(name));
+  if(this.setupRan) { noun.setupRan = true; }
   if(after) { noun._afterSetup(after); }
   return noun;
 };
@@ -45,11 +46,14 @@ exports.getRole = roleManager.get.bind(roleManager);
  */
 exports.role = function(name, after) {
   let role = roleManager.get(name) || roleManager.set(name, new Role(name));
+  if(this.setupRan) { role.setupRan = true; }
   if(after) { role._afterSetup(after); }
   return role;
 };
 
 setTimeout(function() {
-  roleManager.getAll().concat(nounManager.getAll())
-    .forEach( (instance) => instance.setup() );
+  var entities = roleManager.getAll().concat(nounManager.getAll());
+  
+  entities.forEach( (instance) => instance.setup() );
+  exports.setupRan = true;
 }, 0);

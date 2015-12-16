@@ -9,6 +9,9 @@ const afterSetup = module.exports = function(klass) {
    * @param  {Function} fn will be passed insnatce
    */
   klass.prototype._afterSetup = function(fn) {
+    if(this.setupRan) {
+      fn.call(this, this);
+    }
     this._afterSetupFns.push(fn);
   };
 
@@ -17,5 +20,6 @@ const afterSetup = module.exports = function(klass) {
    */
   klass.prototype.setup = function() {
     this._afterSetupFns.forEach( (fn) => fn.call(this, this), this);
+    this.setupRan = true;
   };
 };
