@@ -3,14 +3,14 @@
  * @class  Noun
  */
 
-class Noun {
+class Noun extends require('./afterSetup'){
   /**
    * @param  {string} name - name of noun
    * @return {noun}        - the created noun
    */
   constructor(name) {
+    super();
     this.name = name;
-    this.afterSetupFns = [];
     this.verbs = new Set();
     this.permissions = {};
     ['create','read','update','delete'].forEach( (v) => this.verb(v), this);
@@ -67,8 +67,5 @@ class Noun {
   }
 
 }
-
-require('./setupMixin')(Noun);
-
 
 module.exports = Noun;

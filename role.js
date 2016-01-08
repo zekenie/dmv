@@ -4,10 +4,10 @@
  */
 const nounManager = require('./nounManager');
 
-class Role {
+class Role extends require('./afterSetup'){
   constructor(name) {
+    super();
     this.name = name;
-    this.afterSetupFns = [];
   }
 
   /**
@@ -38,6 +38,5 @@ class Role {
   }
 }
 
-require('./setupMixin')(Role);
 
 module.exports = Role;
