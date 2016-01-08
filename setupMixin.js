@@ -1,7 +1,6 @@
 'use strict';
 
 const afterSetup = module.exports = function(klass) {
-  klass.prototype._afterSetupFns = [];
 
   /**
    * pushes fn to list of functions to run after setup

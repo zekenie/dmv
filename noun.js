@@ -10,6 +10,7 @@ class Noun {
    */
   constructor(name) {
     this.name = name;
+    this.afterSetupFns = [];
     this.verbs = new Set();
     this.permissions = {};
     ['create','read','update','delete'].forEach( (v) => this.verb(v), this);

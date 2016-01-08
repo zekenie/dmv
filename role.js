@@ -7,6 +7,7 @@ const nounManager = require('./nounManager');
 class Role {
   constructor(name) {
     this.name = name;
+    this.afterSetupFns = [];
   }
 
   /**
