@@ -143,23 +143,30 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Noun = (function () {
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Noun = (function (_require) {
+	  _inherits(Noun, _require);
+
 	  /**
 	   * @param  {string} name - name of noun
 	   * @return {noun}        - the created noun
 	   */
 
 	  function Noun(name) {
-	    var _this = this;
-
 	    _classCallCheck(this, Noun);
 
-	    this.name = name;
-	    this.verbs = new Set();
-	    this.permissions = {};
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Noun).call(this));
+
+	    _this.name = name;
+	    _this.verbs = new Set();
+	    _this.permissions = {};
 	    ['create', 'read', 'update', 'delete'].forEach(function (v) {
 	      return _this.verb(v);
-	    }, this);
+	    }, _this);
+	    return _this;
 	  }
 
 	  /**
@@ -235,9 +242,7 @@
 	  }]);
 
 	  return Noun;
-	})();
-
-	__webpack_require__(3)(Noun);
+	})(__webpack_require__(3));
 
 	module.exports = Noun;
 
@@ -247,33 +252,39 @@
 
 	'use strict';
 
-	var afterSetup = module.exports = function (klass) {
-	  klass.prototype._afterSetupFns = [];
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	  /**
-	   * pushes fn to list of functions to run after setup
-	   * @protected
-	   * @param  {Function} fn will be passed insnatce
-	   */
-	  klass.prototype._afterSetup = function (fn) {
-	    if (this.setupRan) {
-	      fn.call(this, this);
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	module.exports = (function () {
+	  function AfterSetup() {
+	    _classCallCheck(this, AfterSetup);
+
+	    this._afterSetupFns = [];
+	  }
+
+	  _createClass(AfterSetup, [{
+	    key: '_afterSetup',
+	    value: function _afterSetup(fn) {
+	      if (this.setupRan) {
+	        fn.call(this, this);
+	      }
+	      this._afterSetupFns.push(fn);
 	    }
-	    this._afterSetupFns.push(fn);
-	  };
+	  }, {
+	    key: 'setup',
+	    value: function setup() {
+	      var _this = this;
 
-	  /**
-	   * Calls all aftersetup methods
-	   */
-	  klass.prototype.setup = function () {
-	    var _this = this;
+	      this._afterSetupFns.forEach(function (fn) {
+	        return fn.call(_this, _this);
+	      }, this);
+	      this.setupRan = true;
+	    }
+	  }]);
 
-	    this._afterSetupFns.forEach(function (fn) {
-	      return fn.call(_this, _this);
-	    }, this);
-	    this.setupRan = true;
-	  };
-	};
+	  return AfterSetup;
+	})();
 
 /***/ },
 /* 4 */
@@ -289,13 +300,22 @@
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
 	var nounManager = __webpack_require__(5);
 
-	var Role = (function () {
+	var Role = (function (_require) {
+	  _inherits(Role, _require);
+
 	  function Role(name) {
 	    _classCallCheck(this, Role);
 
-	    this.name = name;
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Role).call(this));
+
+	    _this.name = name;
+	    return _this;
 	  }
 
 	  /**
@@ -337,9 +357,7 @@
 	  }]);
 
 	  return Role;
-	})();
-
-	__webpack_require__(3)(Role);
+	})(__webpack_require__(3));
 
 	module.exports = Role;
 
