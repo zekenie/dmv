@@ -490,9 +490,9 @@
 	        }
 	      },
 	      can: function can(verb, noun) {
-	        if (_.where(this.permissionsWhitelist, { verb: verb, noun: noun }).length) {
+	        if (_.filter(this.permissionsWhitelist, { verb: verb, noun: noun }).length) {
 	          return true;
-	        } else if (_.where(this.permissionsBlacklist, { verb: verb, noun: noun }).length) {
+	        } else if (_.filter(this.permissionsBlacklist, { verb: verb, noun: noun }).length) {
 	          return false;
 	        } else {
 	          return roleManager.can(this.roles, verb, noun);
