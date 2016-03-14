@@ -61,9 +61,9 @@ angular.module('dmv', [])
           }
         },
         can: function(verb, noun) {
-          if(_.where(this.permissionsWhitelist, { verb, noun }).length) {
+          if(_.filter(this.permissionsWhitelist, { verb, noun }).length) {
             return true;
-          } else if(_.where(this.permissionsBlacklist, { verb, noun }).length) {
+          } else if(_.filter(this.permissionsBlacklist, { verb, noun }).length) {
             return false;
           } else {
             return roleManager.can(this.roles, verb, noun);
