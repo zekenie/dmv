@@ -5,7 +5,6 @@ chai.use(spies);
 const expect = chai.expect;
 const crud = ['create', 'read', 'update', 'delete'];
 const Noun = require('../noun');
-const dmv = require('../');
 
 describe('Noun', function () {
   let noun;
