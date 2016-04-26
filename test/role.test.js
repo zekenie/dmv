@@ -13,12 +13,8 @@ describe('Role', function () {
 
   beforeEach('set up new role and stubs', function () {
     owner = new Role('owner');
-    hasStub = sinon.stub(nounManager, 'has', function (noun) {
-      return noun === 'cat';
-    });
-    getStub = sinon.stub(nounManager, 'get', function (noun) {
-      return cat;
-    });
+    hasStub = sinon.stub(nounManager, 'has', noun => noun === 'cat');
+    getStub = sinon.stub(nounManager, 'get', noun => cat);
     cat = {
       checkAuthorization: sinon.spy(function (role, verb) {}),
       authorize: sinon.spy(function(role, verbs) {})
@@ -49,9 +45,7 @@ describe('Role', function () {
 
   describe('authorize', function () {
     it('throws an error if the noun does not exist', function () {
-      expect(function () {
-        owner.authorize('pet', 'dog');
-      }).to.throw(Error);
+      expect(() => { owner.authorize('pet', 'dog'); }).to.throw(Error);
     });
 
     it('calls the authorize method with the correct arguments', function () {
