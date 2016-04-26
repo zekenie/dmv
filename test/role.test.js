@@ -1,7 +1,5 @@
 'use strict';
 const chai = require('chai');
-const spies = require('chai-spies');
-chai.use(spies);
 const expect = chai.expect;
 const Role = require('../role');
 const nounManager = require('../nounManager');
