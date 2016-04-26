@@ -1,25 +1,35 @@
 'use strict';
 const chai = require('chai');
 const spies = require('chai-spies');
-const sinon = require('sinon');
 chai.use(spies);
 const expect = chai.expect;
 const Role = require('../role');
 const nounManager = require('../nounManager');
+const sinon = require('sinon');
 
 describe('Role', function () {
   let owner;
   let hasStub;
+  let getStub;
+  let cat;
 
-  beforeEach('setup', function () {
+  beforeEach('set up new role and stubs', function () {
     owner = new Role('owner');
     hasStub = sinon.stub(nounManager, 'has', function (noun) {
       return noun === 'cat';
     });
+    getStub = sinon.stub(nounManager, 'get', function (noun) {
+      return cat;
+    });
+    cat = {
+      checkAuthorization: sinon.spy(function (role, verb) {}),
+      authorize: sinon.spy(function(role, verbs) {})
+    };
   });
 
-  afterEach('restore stubs', function() {
+  afterEach('restore stubs', function () {
     hasStub.restore();
+    getStub.restore();
   });
 
   describe('constructor', function () {
@@ -29,8 +39,26 @@ describe('Role', function () {
   });
 
   describe('can', function () {
-    it('returns false if a noun does not exist', function () {
+    it('returns false if the noun does not exist', function () {
       expect(owner.can('pet', 'dog')).to.be.false;
+    });
+
+    it('calls the checkAuthorization method with the correct arguments', function () {
+      owner.can('create', 'cat');
+      sinon.assert.calledWith(cat.checkAuthorization, 'owner', 'create');
+    });
+  });
+
+  describe('authorize', function () {
+    it('throws an error if the noun does not exist', function () {
+      expect(function () {
+        owner.authorize('pet', 'dog');
+      }).to.throw(Error);
+    });
+
+    it('calls the authorize method with the correct arguments', function () {
+      owner.authorize(['pet', 'update'], 'cat');
+      sinon.assert.calledWith(cat.authorize, 'owner', ['pet', 'update']);
     });
   });
 
