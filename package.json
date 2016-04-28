@@ -2,9 +2,9 @@
   "name": "dmv",
   "version": "1.1.0",
   "description": "A MEAN stack role/permission management system",
-  "author": { "name" : "Zeke Nierenberg"
-, "email" : "hampzan09@gmail.com"
-, "url" : "http://zeke.io"
+  "author": { "name" : "Zeke Nierenberg",
+  "email" : "hampzan09@gmail.com",
+  "url" : "http://zeke.io"
 },
   "repository": "https://github.com/zekenie/dmv",
   "main": "index.js",
@@ -26,6 +26,7 @@
     "mocha": "^2.3.4",
     "ng-annotate-loader": "0.0.10",
     "jsdoc": "^3.4.0",
+    "sinon": "^1.17.3",
     "webpack": "^1.12.9"
   },
   "dependencies": {
