@@ -1,3 +1,6 @@
+![Build status](https://codeship.com/projects/411fa760-efb2-0133-4ce2-762d210387aa/status?branch=master
+)
+
 # DMV
 
 ## Intro
