@@ -13,35 +13,12 @@
 const dmv = require('./dmv');
 const roleManager = require('./roleManager');
 const angular = require('angular');
-const _ = require('lodash');
+const canMixin = require('./canMixin');
 
 angular.module('dmv', [])
   .factory('canPlugin', function() {
     return function(proto) {
-      angular.extend(proto, {
-        hasRole: function(r) {
-          if (typeof r === 'string'){
-            return this.roles.indexOf(r) !== -1;
-          } else if (Array.isArray(r)) {
-            let hasAllRoles = true;
-            r.forEach(function (role) {
-              if (this.roles.indexOf(role) === -1){
-                hasAllRoles = false;
-              }
-            }, this);
-            return hasAllRoles;
-          }
-        },
-        can: function(verb, noun) {
-          if(_.filter(this.permissionsWhitelist, { verb, noun }).length) {
-            return true;
-          } else if(_.filter(this.permissionsBlacklist, { verb, noun }).length) {
-            return false;
-          } else {
-            return roleManager.can(this.roles, verb, noun);
-          }
-        }
-      });
+      angular.extend(proto, canMixin);
     };
   })
   .factory('authConfig', function($rootScope, $injector) {
