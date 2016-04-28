@@ -8,6 +8,9 @@
 },
   "repository": "https://github.com/zekenie/dmv",
   "main": "index.js",
+  "engines": {
+    "node": "^6.0.0"  
+  },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha",
     "doc": "./node_modules/.bin/jsdoc -c ./jsdoc.conf.json",
