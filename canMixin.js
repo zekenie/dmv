@@ -25,7 +25,7 @@ exports.can = function(verb, noun) {
  * @param  {String|Array}  r role
  * @return {Boolean}
  */
-exports.hasRole = hasRole = function(r) {
+exports.hasRole = function(r) {
   if (typeof r === 'string'){
     return this.roles.indexOf(r) !== -1;
   } else if (Array.isArray(r)) {
