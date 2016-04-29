@@ -27,4 +27,4 @@ ratings:
 exclude_paths:
 - test/
 - out/
-- bundle.js
+- browser.js
