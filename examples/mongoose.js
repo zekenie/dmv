@@ -43,7 +43,8 @@ userPromise.then(function(users) {
   console.log('can zeke create cats?', zeke.can('create','cat'));
   console.log('can zeke pet cats?', zeke.can('pet', 'cat'));
   console.log('can god update cats?', god.can('update', 'cat'));
-});
+})
+.catch(console.error);
 
 
 

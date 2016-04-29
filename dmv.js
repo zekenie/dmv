@@ -3,16 +3,18 @@
  * @module main
  * @requires Noun
  * @requires Role
- * @requires roleManager
- * @requires nounManager
+ * @requires RoleManager
+ * @requires NounManager
  */
 
 'use strict';
 const Noun = require('./noun');
 const Role = require('./role');
 
-const roleManager = require('./roleManager');
-const nounManager = require('./nounManager');
+const RoleManager = require('./roleManager');
+const NounManager = require('./nounManager');
+const nouns = require('./nouns');
+const roles = require('./roles');
 
 /**
  * Regester a new noun
@@ -21,7 +23,8 @@ const nounManager = require('./nounManager');
  * @return {noun}       returns noun instance
  */
 exports.noun = function(name, after) {
-  let noun = nounManager.get(name) || nounManager.set(name, new Noun(name));
+  if(!nouns.get(name)) { nouns.set(name, new Noun(name)); }
+  const noun = nouns.get(name);
   if(this.setupRan) { noun.setupRan = true; }
   if(after) { noun._afterSetup(after); }
   return noun;
@@ -29,14 +32,14 @@ exports.noun = function(name, after) {
 
 /**
  * Gets all regestered nouns. Must be called after setup
- * @return {Array<Noun>}
+ * @return {Iterator<Noun>}
  */
 exports.getAllNouns = function() {
-  return nounManager.getAll();
+  return nouns.values();
 };
 
-exports.getNoun = nounManager.get.bind(nounManager);
-exports.getRole = roleManager.get.bind(roleManager);
+exports.getNoun = nouns.get.bind(nouns);
+exports.getRole = roles.get.bind(roles);
 
 /**
  * Regester a new role
@@ -45,14 +48,15 @@ exports.getRole = roleManager.get.bind(roleManager);
  * @return {role}       returns role instance
  */
 exports.role = function(name, after) {
-  let role = roleManager.get(name) || roleManager.set(name, new Role(name));
+  if(!roles.get(name)) { roles.set(name, new Role(name)); }
+  const role = roles.get(name);
   if(this.setupRan) { role.setupRan = true; }
   if(after) { role._afterSetup(after); }
   return role;
 };
 
 setTimeout(function() {
-  var entities = roleManager.getAll().concat(nounManager.getAll());
+  var entities = Array.from(nouns.values()).concat(Array.from(nouns.values()));
   
   entities.forEach( (instance) => instance.setup() );
   exports.setupRan = true;

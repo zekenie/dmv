@@ -1,23 +1,5 @@
 'use strict';
 
-const nouns = {};
-const _ = require('lodash');
+class NounManager extends Map {}
 
-module.exports = {
-  get: function(name) {
-    return nouns[name];
-  },
-
-  getAll: function() {
-    return _.values(nouns);
-  },
-
-  has: function(name) {
-    return !!this.get(name);
-  },
-
-  set: function(name, value) {
-    nouns[name] = value;
-    return value;
-  }
-};
+module.exports = NounManager;

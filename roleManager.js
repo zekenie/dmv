@@ -1,47 +1,16 @@
 'use strict';
-
-const roles = {};
-const _ = require('lodash');
-
 /**
  * @module  RoleManager
+ * @extends {Map}
  */
 
-module.exports = {
-  /**
-   * Gets a role by name
-   * @param  {string} name
-   * @return {role}
-   */
-  get: function(name) {
-    return roles[name];
-  },
-
-  /**
-   * gets all registered roles
-   * @return {role[]}
-   */
-  getAll: function() {
-    return _.values(roles);
-  },
-
-  has: function(name) {
-    return !!this.get(name);
-  },
-
-  set: function(name, value) {
-    roles[name] = value;
-    return value;
-  },
-
-  can: function(roles, verb, noun) {
-    if(roles.some( (r) => !this.has(r), this)) { return false; }
+class RoleManager extends Map {
+  can(roles, verb, noun) {
+    if(roles.some(r => !this.has(r))) { return false; }
     return roles
-      .map(function(role) {
-        return this.get(role);
-      }, this)
-      .some(function(role) {
-        return role.can(verb, noun);
-      });
+      .map(role => this.get(role))
+      .some(role => role.can(verb, noun));
   }
-};
+}
+
+module.exports = RoleManager;

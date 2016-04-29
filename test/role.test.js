@@ -2,7 +2,7 @@
 const chai = require('chai');
 const expect = chai.expect;
 const Role = require('../role');
-const nounManager = require('../nounManager');
+const nouns = require('../nouns');
 const sinon = require('sinon');
 
 describe('Role', function () {
@@ -12,9 +12,9 @@ describe('Role', function () {
   let cat;
 
   beforeEach('set up new role and stubs', function () {
-    owner = new Role('owner');
-    hasStub = sinon.stub(nounManager, 'has', noun => noun === 'cat');
-    getStub = sinon.stub(nounManager, 'get', noun => cat);
+    owner = new Role('owner', nouns);
+    hasStub = sinon.stub(nouns, 'has', noun => noun === 'cat');
+    getStub = sinon.stub(nouns, 'get', noun => cat);
     cat = {
       checkAuthorization: sinon.spy(function (role, verb) {}),
       authorize: sinon.spy(function(role, verbs) {})

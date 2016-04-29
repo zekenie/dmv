@@ -1,7 +1,10 @@
 'use strict';
 
-const _ = require('lodash');
-const roleManager = require('./roleManager');
+const roles = require('./roles');
+
+const onPermissionList = (list, verb, noun) => {
+  return list && !!list.find(item => item.verb === verb && item.noun === noun);
+};
 
 /**
  * Checks if a user has the ability to perform an action on a noun
@@ -11,12 +14,12 @@ const roleManager = require('./roleManager');
  * @return {boolean}
  */
 exports.can = function(verb, noun) {
-  if(_.filter(this.permissionsWhitelist, { verb, noun }).length) {
+  if(onPermissionList(this.permissionWhiteList, verb, noun)) {
     return true;
-  } else if(_.filter(this.permissionsBlacklist, { verb, noun }).length) {
+  } else if(onPermissionList(this.permissionBlackList, verb, noun)) {
     return false;
   } else {
-    return roleManager.can(this.roles, verb, noun);
+    return roles.can(this.roles, verb, noun);
   }
 };
 
@@ -29,12 +32,6 @@ exports.hasRole = function(r) {
   if (typeof r === 'string'){
     return this.roles.indexOf(r) !== -1;
   } else if (Array.isArray(r)) {
-    let hasAllRoles = true;
-    r.forEach(function (role) {
-      if (this.roles.indexOf(role) === -1){
-        hasAllRoles = false;
-      }
-    }, this);
-    return hasAllRoles;
+    return !r.some(role => !this.roles.includes(role))
   }
 };

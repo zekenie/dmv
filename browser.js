@@ -51,7 +51,7 @@
 	window.dmv = __webpack_require__(1);
 	module.exports = window.dmv;
 	// angular code just needs to run. it will regester module with angular
-	__webpack_require__(8);
+	__webpack_require__(9);
 
 /***/ },
 /* 1 */
@@ -62,8 +62,8 @@
 	 * @module main
 	 * @requires Noun
 	 * @requires Role
-	 * @requires roleManager
-	 * @requires nounManager
+	 * @requires RoleManager
+	 * @requires NounManager
 	 */
 
 	'use strict';
@@ -71,8 +71,10 @@
 	var Noun = __webpack_require__(2);
 	var Role = __webpack_require__(4);
 
-	var roleManager = __webpack_require__(7);
-	var nounManager = __webpack_require__(5);
+	var RoleManager = __webpack_require__(7);
+	var NounManager = __webpack_require__(6);
+	var nouns = __webpack_require__(5);
+	var roles = __webpack_require__(8);
 
 	/**
 	 * Regester a new noun
@@ -81,7 +83,10 @@
 	 * @return {noun}       returns noun instance
 	 */
 	exports.noun = function (name, after) {
-	  var noun = nounManager.get(name) || nounManager.set(name, new Noun(name));
+	  if (!nouns.get(name)) {
+	    nouns.set(name, new Noun(name));
+	  }
+	  var noun = nouns.get(name);
 	  if (this.setupRan) {
 	    noun.setupRan = true;
 	  }
@@ -93,14 +98,14 @@
 
 	/**
 	 * Gets all regestered nouns. Must be called after setup
-	 * @return {Array<Noun>}
+	 * @return {Iterator<Noun>}
 	 */
 	exports.getAllNouns = function () {
-	  return nounManager.getAll();
+	  return nouns.values();
 	};
 
-	exports.getNoun = nounManager.get.bind(nounManager);
-	exports.getRole = roleManager.get.bind(roleManager);
+	exports.getNoun = nouns.get.bind(nouns);
+	exports.getRole = roles.get.bind(roles);
 
 	/**
 	 * Regester a new role
@@ -109,7 +114,10 @@
 	 * @return {role}       returns role instance
 	 */
 	exports.role = function (name, after) {
-	  var role = roleManager.get(name) || roleManager.set(name, new Role(name));
+	  if (!roles.get(name)) {
+	    roles.set(name, new Role(name));
+	  }
+	  var role = roles.get(name);
 	  if (this.setupRan) {
 	    role.setupRan = true;
 	  }
@@ -120,7 +128,7 @@
 	};
 
 	setTimeout(function () {
-	  var entities = roleManager.getAll().concat(nounManager.getAll());
+	  var entities = Array.from(nouns.values()).concat(Array.from(nouns.values()));
 
 	  entities.forEach(function (instance) {
 	    return instance.setup();
@@ -304,7 +312,7 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	var nounManager = __webpack_require__(5);
+	var nouns = __webpack_require__(5);
 
 	var Role = (function (_require) {
 	  _inherits(Role, _require);
@@ -331,10 +339,10 @@
 	  _createClass(Role, [{
 	    key: 'can',
 	    value: function can(verb, noun) {
-	      if (!nounManager.has(noun)) {
+	      if (!nouns.has(noun)) {
 	        return false;
 	      }
-	      return nounManager.get(noun).checkAuthorization(this.name, verb);
+	      return nouns.get(noun).checkAuthorization(this.name, verb);
 	    }
 
 	    /**
@@ -349,10 +357,10 @@
 	  }, {
 	    key: 'authorize',
 	    value: function authorize(verbs, noun) {
-	      if (!nounManager.has(noun)) {
+	      if (!nouns.has(noun)) {
 	        throw new Error('cannot authorize ' + noun);
 	      }
-	      nounManager.get(noun).authorize(this.name, verbs);
+	      nouns.get(noun).authorize(this.name, verbs);
 	    }
 	  }]);
 
@@ -367,92 +375,100 @@
 
 	'use strict';
 
-	var nouns = {};
-	var _ = __webpack_require__(6);
+	var NounManager = __webpack_require__(6);
 
-	module.exports = {
-	  get: function get(name) {
-	    return nouns[name];
-	  },
-
-	  getAll: function getAll() {
-	    return _.values(nouns);
-	  },
-
-	  has: function has(name) {
-	    return !!this.get(name);
-	  },
-
-	  set: function set(name, value) {
-	    nouns[name] = value;
-	    return value;
-	  }
-	};
+	module.exports = new NounManager();
 
 /***/ },
 /* 6 */
 /***/ function(module, exports) {
 
-	module.exports = _;
+	'use strict';
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var NounManager = (function (_Map) {
+	  _inherits(NounManager, _Map);
+
+	  function NounManager() {
+	    _classCallCheck(this, NounManager);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(NounManager).apply(this, arguments));
+	  }
+
+	  return NounManager;
+	})(Map);
+
+	module.exports = NounManager;
 
 /***/ },
 /* 7 */
+/***/ function(module, exports) {
+
+	'use strict'
+	/**
+	 * @module  RoleManager
+	 * @extends {Map}
+	 */
+
+	;
+
+	var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var RoleManager = (function (_Map) {
+	  _inherits(RoleManager, _Map);
+
+	  function RoleManager() {
+	    _classCallCheck(this, RoleManager);
+
+	    return _possibleConstructorReturn(this, Object.getPrototypeOf(RoleManager).apply(this, arguments));
+	  }
+
+	  _createClass(RoleManager, [{
+	    key: 'can',
+	    value: function can(roles, verb, noun) {
+	      var _this2 = this;
+
+	      if (roles.some(function (r) {
+	        return !_this2.has(r);
+	      })) {
+	        return false;
+	      }
+	      return roles.map(function (role) {
+	        return _this2.get(role);
+	      }).some(function (role) {
+	        return role.can(verb, noun);
+	      });
+	    }
+	  }]);
+
+	  return RoleManager;
+	})(Map);
+
+	module.exports = RoleManager;
+
+/***/ },
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var roles = {};
-	var _ = __webpack_require__(6);
+	var RoleManager = __webpack_require__(7);
 
-	/**
-	 * @module  RoleManager
-	 */
-
-	module.exports = {
-	  /**
-	   * Gets a role by name
-	   * @param  {string} name
-	   * @return {role}
-	   */
-	  get: function get(name) {
-	    return roles[name];
-	  },
-
-	  /**
-	   * gets all registered roles
-	   * @return {role[]}
-	   */
-	  getAll: function getAll() {
-	    return _.values(roles);
-	  },
-
-	  has: function has(name) {
-	    return !!this.get(name);
-	  },
-
-	  set: function set(name, value) {
-	    roles[name] = value;
-	    return value;
-	  },
-
-	  can: function can(roles, verb, noun) {
-	    var _this = this;
-
-	    if (roles.some(function (r) {
-	      return !_this.has(r);
-	    }, this)) {
-	      return false;
-	    }
-	    return roles.map(function (role) {
-	      return this.get(role);
-	    }, this).some(function (role) {
-	      return role.can(verb, noun);
-	    });
-	  }
-	};
+	module.exports = new RoleManager();
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict'
@@ -470,35 +486,12 @@
 	;
 	var dmv = __webpack_require__(1);
 	var roleManager = __webpack_require__(7);
-	var angular = __webpack_require__(9);
-	var _ = __webpack_require__(6);
+	var angular = __webpack_require__(10);
+	var canMixin = __webpack_require__(11);
 
 	angular.module('dmv', []).factory('canPlugin', function () {
 	  return function (proto) {
-	    angular.extend(proto, {
-	      hasRole: function hasRole(r) {
-	        if (typeof r === 'string') {
-	          return this.roles.indexOf(r) !== -1;
-	        } else if (Array.isArray(r)) {
-	          var hasAllRoles = true;
-	          r.forEach(function (role) {
-	            if (this.roles.indexOf(role) === -1) {
-	              hasAllRoles = false;
-	            }
-	          }, this);
-	          return hasAllRoles;
-	        }
-	      },
-	      can: function can(verb, noun) {
-	        if (_.filter(this.permissionsWhitelist, { verb: verb, noun: noun }).length) {
-	          return true;
-	        } else if (_.filter(this.permissionsBlacklist, { verb: verb, noun: noun }).length) {
-	          return false;
-	        } else {
-	          return roleManager.can(this.roles, verb, noun);
-	        }
-	      }
-	    });
+	    angular.extend(proto, canMixin);
 	  };
 	}).factory('authConfig', ["$rootScope", "$injector", function ($rootScope, $injector) {
 
@@ -551,10 +544,58 @@
 	}]);
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	module.exports = angular;
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var roles = __webpack_require__(8);
+
+	var onPermissionList = function onPermissionList(list, verb, noun) {
+	  return list && !!list.find(function (item) {
+	    return item.verb === verb && item.noun === noun;
+	  });
+	};
+
+	/**
+	 * Checks if a user has the ability to perform an action on a noun
+	 * @memberOf plugins/mongoose
+	 * @param  {string} verb
+	 * @param  {string} noun
+	 * @return {boolean}
+	 */
+	exports.can = function (verb, noun) {
+	  if (onPermissionList(this.permissionWhiteList, verb, noun)) {
+	    return true;
+	  } else if (onPermissionList(this.permissionBlackList, verb, noun)) {
+	    return false;
+	  } else {
+	    return roles.can(this.roles, verb, noun);
+	  }
+	};
+
+	/**
+	 * Determines if user has role or roles
+	 * @param  {String|Array}  r role
+	 * @return {Boolean}
+	 */
+	exports.hasRole = function (r) {
+	  var _this = this;
+
+	  if (typeof r === 'string') {
+	    return this.roles.indexOf(r) !== -1;
+	  } else if (Array.isArray(r)) {
+	    return !r.some(function (role) {
+	      return !_this.roles.includes(role);
+	    });
+	  }
+	};
 
 /***/ }
 /******/ ]);

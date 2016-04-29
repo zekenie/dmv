@@ -2,7 +2,7 @@
 /**
  * @class Role
  */
-const nounManager = require('./nounManager');
+const nouns = require('./nouns');
 
 class Role extends require('./afterSetup'){
   constructor(name) {
@@ -20,8 +20,8 @@ class Role extends require('./afterSetup'){
    * @return {boolean}
    */
   can(verb, noun) {
-    if(!nounManager.has(noun)) { return false; }
-    return nounManager.get(noun).checkAuthorization(this.name, verb);
+    if(!nouns.has(noun)) { return false; }
+    return nouns.get(noun).checkAuthorization(this.name, verb);
   }
 
   /**
@@ -33,8 +33,8 @@ class Role extends require('./afterSetup'){
    * @param  {String} noun
    */
   authorize(verbs, noun) {
-    if(!nounManager.has(noun)) { throw new Error(`cannot authorize ${noun}`); }
-    nounManager.get(noun).authorize(this.name, verbs);
+    if(!nouns.has(noun)) { throw new Error(`cannot authorize ${noun}`); }
+    nouns.get(noun).authorize(this.name, verbs);
   }
 }
 
