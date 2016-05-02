@@ -76,25 +76,35 @@
 	var nouns = __webpack_require__(5);
 	var roles = __webpack_require__(8);
 
+	var addEntitiy = function addEntitiy(store, Constructor, name, after) {
+	  if (!store.get(name)) {
+	    store.set(name, new Constructor(name));
+	  }
+	  var instance = store.get(name);
+	  if (undefined.setupRan) {
+	    instance.setupRan = true;
+	  }
+	  if (after) {
+	    instance._afterSetup(after);
+	  }
+	  return instance;
+	};
+
 	/**
 	 * Regester a new noun
 	 * @param  {string} name - noun name
 	 * @param  {function} after - fn to run after setup. Passed noun instance. 
 	 * @return {noun}       returns noun instance
 	 */
-	exports.noun = function (name, after) {
-	  if (!nouns.get(name)) {
-	    nouns.set(name, new Noun(name));
-	  }
-	  var noun = nouns.get(name);
-	  if (this.setupRan) {
-	    noun.setupRan = true;
-	  }
-	  if (after) {
-	    noun._afterSetup(after);
-	  }
-	  return noun;
-	};
+	exports.noun = addEntitiy.bind(exports, nouns, Noun);
+
+	/**
+	 * Regester a new role
+	 * @param  {string} name - role name
+	 * @param  {function} after - fn to run after setup. Passed role instance. 
+	 * @return {role}       returns role instance
+	 */
+	exports.role = addEntitiy.bind(exports, roles, Role);
 
 	/**
 	 * Gets all regestered nouns. Must be called after setup
@@ -106,26 +116,6 @@
 
 	exports.getNoun = nouns.get.bind(nouns);
 	exports.getRole = roles.get.bind(roles);
-
-	/**
-	 * Regester a new role
-	 * @param  {string} name - role name
-	 * @param  {function} after - fn to run after setup. Passed role instance. 
-	 * @return {role}       returns role instance
-	 */
-	exports.role = function (name, after) {
-	  if (!roles.get(name)) {
-	    roles.set(name, new Role(name));
-	  }
-	  var role = roles.get(name);
-	  if (this.setupRan) {
-	    role.setupRan = true;
-	  }
-	  if (after) {
-	    role._afterSetup(after);
-	  }
-	  return role;
-	};
 
 	setTimeout(function () {
 	  var entities = Array.from(nouns.values()).concat(Array.from(nouns.values()));
