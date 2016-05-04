@@ -6,10 +6,8 @@
 
 class RoleManager extends Map {
   can(roles, verb, noun) {
-    if(roles.some(r => !this.has(r))) { return false; }
-    return roles
-      .map(role => this.get(role))
-      .some(role => role.can(verb, noun));
+    return roles.every(r => this.has(r)) && 
+    roles.some(r => this.get(r).can(verb, noun));
   }
 }
 
