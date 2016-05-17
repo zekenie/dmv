@@ -507,11 +507,13 @@
 	            return;
 	          }
 	          for (var verb in next.auth) {
-	            var noun = next.auth[verb];
-	            if (!user.can(verb, noun)) {
-	              event.preventDefault();
-	              $rootScope.$broadcast('NOT_AUTHORIZED');
-	              return;
+	            if (next.auth.hasOwnProperty(verb)) {
+	              var noun = next.auth[verb];
+	              if (!user.can(verb, noun)) {
+	                event.preventDefault();
+	                $rootScope.$broadcast('NOT_AUTHORIZED');
+	                return;
+	              }
 	            }
 	          }
 	        }

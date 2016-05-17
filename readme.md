@@ -78,7 +78,8 @@ const userSchema = new mongoose.Schema({
  * More on the latter two in a minute.
  * It will also add the `can` method.
  */
-userSchema.plugin(dmv.mongoosePlugin);
+
+userSchema.plugin(require('dmv/mongoosePlugin'));
 
 mongoose.model('User', userSchema);
 
@@ -120,7 +121,7 @@ hilary.can('approve', 'article') // true
 
 ```js
 const dmv = require('dmv');
-const auth = dmv.expressMiddleware
+const auth = require('dmv/expressMiddleware');
 
 // articles router
 
