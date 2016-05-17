@@ -4,6 +4,6 @@
 window.dmv = require('./dmv');
 module.exports = window.dmv;
 // angular code just needs to run. it will register module with angular
-if(!!angular) {
+if(typeof angular !== 'undefined') {
   require('./angularPlugin');
 }

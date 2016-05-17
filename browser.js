@@ -51,7 +51,7 @@
 	window.dmv = __webpack_require__(1);
 	module.exports = window.dmv;
 	// angular code just needs to run. it will register module with angular
-	if (!!angular) {
+	if (typeof angular !== 'undefined') {
 	  __webpack_require__(9);
 	}
 
