@@ -1,6 +1,6 @@
 {
   "name": "dmv",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "A MEAN stack role/permission management system",
   "author": "Zeke Nierenberg",
   "repository": "https://github.com/zekenie/dmv",
@@ -30,11 +30,9 @@
     "ng-annotate-loader": "0.1.0",
     "sinon": "^1.17.3",
     "webpack": "^1.13.0"
-  },
-  "dependencies": {},
-  "peerDependencies": {
     "express": "^4.13.3",
     "mongoose": "^4.2.6",
     "angular-ui-router": "^0.2.15"
-  }
+  },
+  "dependencies": {}
 }
