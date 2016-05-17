@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Mixin: mongoosePlugin</title>
+    <title>JSDoc: Source: nounManager.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,98 +17,31 @@
 
 <div id="main">
 
-    <h1 class="page-title">Mixin: mongoosePlugin</h1>
+    <h1 class="page-title">Source: nounManager.js</h1>
 
     
 
 
 
-
-<section>
-
-<header>
     
-        <h2>
-            <span class="ancestors"><a href="module-plugins_mongoose.html">plugins/mongoose</a>~</span>mongoosePlugin</h2>
-        
-            <div class="class-description"><p>Mongoose plugin to provide roles to users</p></div>
-        
-    
-</header>
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>'use strict';
 
-<article>
-    <div class="container-overview">
-    
-        
+/** @todo  extends Map */
+class NounManager {
+  constructor() {
+    this.map = new Map();
+    this.set = this.map.set.bind(this.map);
+    this.get = this.map.get.bind(this.map);
+    this.has = this.map.has.bind(this.map);
+    this.values = this.map.values.bind(this.map);
+  }
+}
 
-        
-
-
-<dl class="details">
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="mongoosePlugin.js.html">mongoosePlugin.js</a>, <a href="mongoosePlugin.js.html#line22">line 22</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-        
-    
-    </div>
-
-    
-
-    
-
-    
-
-     
-
-    
-
-    
-
-    
-
-    
-
-    
-</article>
-
-</section>
+module.exports = NounManager;</code></pre>
+        </article>
+    </section>
 
 
 
