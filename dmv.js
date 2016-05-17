@@ -45,7 +45,7 @@ exports.role = addEntity.bind(exports, roles, Role);
  * @return {Iterator<Noun>}
  */
 exports.getAllNouns = function() {
-  return nouns.values();
+  return Array.from(nouns.values());
 };
 
 exports.getNoun = nouns.get.bind(nouns);

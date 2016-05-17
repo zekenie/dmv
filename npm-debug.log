@@ -1,0 +1,128 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/Users/zekenierenberg/.nvm/versions/v6.0.0/bin/node',
+1 verbose cli   '/Users/zekenierenberg/.nvm/versions/v6.0.0/bin/npm',
+1 verbose cli   'publish' ]
+2 info using npm@3.8.6
+3 info using node@v6.0.0
+4 verbose publish [ '.' ]
+5 silly cache add args [ '.', null ]
+6 verbose cache add spec .
+7 silly cache add parsed spec Result {
+7 silly cache add   raw: '.',
+7 silly cache add   scope: null,
+7 silly cache add   name: null,
+7 silly cache add   rawSpec: '.',
+7 silly cache add   spec: '/Users/zekenierenberg/dmv',
+7 silly cache add   type: 'directory' }
+8 verbose addLocalDirectory /Users/zekenierenberg/.npm/dmv/1.2.3/package.tgz not in flight; packing
+9 verbose correctMkdir /Users/zekenierenberg/.npm correctMkdir not in flight; initializing
+10 info lifecycle dmv@1.2.3~prepublish: dmv@1.2.3
+11 silly lifecycle dmv@1.2.3~prepublish: no script for prepublish, continuing
+12 verbose tar pack [ '/Users/zekenierenberg/.npm/dmv/1.2.3/package.tgz',
+12 verbose tar pack   '/Users/zekenierenberg/dmv' ]
+13 verbose tarball /Users/zekenierenberg/.npm/dmv/1.2.3/package.tgz
+14 verbose folder /Users/zekenierenberg/dmv
+15 verbose addLocalTarball adding from inside cache /Users/zekenierenberg/.npm/dmv/1.2.3/package.tgz
+16 verbose correctMkdir /Users/zekenierenberg/.npm correctMkdir not in flight; initializing
+17 silly cache afterAdd dmv@1.2.3
+18 verbose afterAdd /Users/zekenierenberg/.npm/dmv/1.2.3/package/package.json not in flight; writing
+19 verbose correctMkdir /Users/zekenierenberg/.npm correctMkdir not in flight; initializing
+20 verbose afterAdd /Users/zekenierenberg/.npm/dmv/1.2.3/package/package.json written
+21 silly publish { name: 'dmv',
+21 silly publish   version: '1.2.3',
+21 silly publish   description: 'A MEAN stack role/permission management system',
+21 silly publish   author: { name: 'Zeke Nierenberg' },
+21 silly publish   repository: { type: 'git', url: 'git+https://github.com/zekenie/dmv.git' },
+21 silly publish   main: 'index.js',
+21 silly publish   engines: { node: '^6.0.0' },
+21 silly publish   scripts:
+21 silly publish    { test: './node_modules/mocha/bin/mocha',
+21 silly publish      doc: 'jsdoc -c ./jsdoc.conf.json',
+21 silly publish      bundle: 'webpack',
+21 silly publish      build: 'npm run doc && npm run bundle' },
+21 silly publish   keywords: [],
+21 silly publish   license: 'ISC',
+21 silly publish   devDependencies:
+21 silly publish    { angular: '^1.5.5',
+21 silly publish      'babel-core': '^6.8.0',
+21 silly publish      'babel-loader': '^6.2.4',
+21 silly publish      'babel-preset-es2016': '^6.0.11',
+21 silly publish      chai: '^3.4.1',
+21 silly publish      'chai-spies': '^0.7.1',
+21 silly publish      eslint: '^2.10.2',
+21 silly publish      'eslint-loader': '^1.3.0',
+21 silly publish      jsdoc: '^3.4.0',
+21 silly publish      mocha: '^2.3.4',
+21 silly publish      'ng-annotate-loader': '0.1.0',
+21 silly publish      sinon: '^1.17.3',
+21 silly publish      webpack: '^1.13.0' },
+21 silly publish   dependencies: {},
+21 silly publish   peerDependencies:
+21 silly publish    { express: '^4.13.3',
+21 silly publish      mongoose: '^4.2.6',
+21 silly publish      'angular-ui-router': '^0.2.15' },
+21 silly publish   readme: '![Build status](https://codeship.com/projects/411fa760-efb2-0133-4ce2-762d210387aa/status?branch=master\n) [![Code Climate](https://codeclimate.com/github/zekenie/dmv/badges/gpa.svg)](https://codeclimate.com/github/zekenie/dmv) [![Dependency Status](https://gemnasium.com/badges/github.com/zekenie/dmv.svg)](https://gemnasium.com/github.com/zekenie/dmv)\n\n\n# DMV\n\n## Intro\n\nDMV is a MEAN stack library that lets you define roles and permissions. It lets you express thoughts like:\n\n_student_ can *read* **chapter**.\n_teacher_ can *assign* **chapter**.\n\nI like to think about the previous sentence like this\n\n\n```\n  [Role] can [Permission]\n                  ^\n                /   \\\n            [Verb] [Noun]\n```\n\n## Practical Example\n\nWe use DMV to register the roles and nouns:\n\n```js\ndmv.role(\'author\');\ndmv.role(\'moderator\');\ndmv.role(\'admin\');\n\ndmv.noun(\'article\', function(articleNoun) {\n  // by default the noun has crud verbs\n  // we\'re adding the approve verb here\n  articleNoun.verb(\'approve\');\n\n  // we say that admins can do all verbs\n  articleNoun.authorize(\'admin\', \'*\');\n\n  // moderators can \n  articleNoun.authorize(\'moderator\', [\'approve\', \'read\']);\n\n  // authors can\n  articleNoun.authorize(\'author\', [\'create\', \'update\'])\n\n});\n\ndmv.noun(\'comment\', function(commentNoun) {\n  commentNoun.verb(\'approve\');\n\n  // we say that admins can do all verbs\n  commentNoun.authorize(\'admin\', \'*\');\n\n  // moderators can \n  commentNoun.authorize(\'moderator\', [\'approve\']);\n});\n```\n\n### Mongoose\n\n```js\n\nconst userSchema = new mongoose.Schema({\n  name: String\n  // ...\n});\n\n//\n\n/**\n * This plugin will add three paths to your user model\n * \n * - roles\n * - permissionWhitelist\n * - permissionBlacklist\n * \n * More on the latter two in a minute.\n * It will also add the `can` method.\n */\nuserSchema.plugin(dmv.mongoosePlugin);\n\nmongoose.model(\'User\', userSchema);\n\n```\n\nYou can use your user instance\'s can method like this\n\n```js\n\nconst sarah = new User({\n  roles: [\'author\'],\n  name: \'Sarah\'\n});\n\nconst alex = new User({\n  roles: [\'moderator\'],\n  name: \'Alex\'\n});\n\nconst hilary = new User({\n  roles: [\'admin\'],\n  name: \'Hilary\'\n});\n\nsarah.can(\'create\', \'article\'); // => true\nsarah.can(\'update\', \'article\'); // => true\nsarah.can(\'delete\', \'article\'); // => false\n\nalex.can(\'approve\', \'article\'); // true\nalex.can(\'create\', \'article\');  // false\n\nhilary.can(\'delete\', \'article\') // true\nhilary.can(\'approve\', \'article\') // true\n\n```\n\n### Express\n\n\n```js\nconst dmv = require(\'dmv\');\nconst auth = dmv.expressMiddleware\n\n// articles router\n\n// everyone can read all articles\nrouter.get(\'/\', controller.index);\nrouter.post(\'/\', auth.permits(\'create\', \'article\'), controller.create);\n\nrouter.use(\'/:id\', controller.load);\n\nrouter.get(\'/:id\', controller.read);\n\n\nrouter.put(\'/:id\', auth.permits(\'update\', \'article\'), controller.update);\nrouter.delete(\'/:id\', auth.permits(\'delete\', \'article\'), controller.delete);\n```\n\nDmv\'s express middleware calls the `can` method on the `req.user` by default. If your application doesn\'t have a `req.user`, you can define another function to return a user object.\n\n```js\nauth.user(function(req, res) {\n  return req.yourOtherUserObject;\n});\n```\n\nIf you have a router that really only concerns itself with one noun (like above), you can use `permitsFactory` to generate a version of permits that only works for one noun. That would look like this.\n\n```js\nconst dmv = require(\'dmv\');\nconst auth = dmv.expressMiddleware\nconst permits = auth.permitsFactory(\'article\')\n\n// articles router\n\n// everyone can read all articles\nrouter.get(\'/\', controller.index);\nrouter.post(\'/\', permits(\'create\'), controller.create);\n\n// ...\n```\n\n### Angular\n\nNote: we assume you use ui-router for now.\n\nFirst, you can use our browser file\n\n```html\n<script src="./path/to/browser.js"></script>\n```\n\nWe expose the `dmv` object on the global scope. Dmv is isomorphic so you can run the same code defining permissions and roles that you ran on the server. Doing this will depend on your build process and environment. \n\nOnce your frontend knows about the roles and permissions you can plug in our angular module\n\n```js\nangular.module(\'yourApp\', [\'ui.router\', \'dmv\']);\n```\n\nThen, you need to hook us into your user model. We expose a factory called `canPlugin`. `canPlugin` is a function that gives your user model a `can` method by modifying its prototype. You pass the prototype to `canPlugin`. You do it like this.\n\n```js\nyourModule.factory(\'YourUserClass\', funciton($httpMaybe?, canPlugin) {\n  const User = function() {\n    // your constructor\n  };\n\n  canPlugin(User.prototype);\n\n  return User;\n})\n```\n\nYou can call `can` on any of your user instances. In addition, we\'ve added a `hasRole` method on your user class.\n\nYou need to tell dmv how to find your logged in user. We\'ve exposed a method called `getUser` on our `authConfig` factory. You can inject your own angular services. You just need to return your user. The `getUser` method also attaches `can` and `hasRole` to your `$rootScope` so you can show and hide view segments easily.\n\n```js\nyourModule\n  .run(function(authConfig) {\n    // Note, ng-annotate and others won\'t annotate the dependencies for this method. So if you minify in your build process, you should annotate your own dependencies.\n    authConfig.getUser(function(YourUserService, YourAuthService) {\n      return YouAuthService.getLoggedInUser();\n    })\n  })\n  \n```\n\nThen you can add a special `auth` property to your ui-router state definitions.\n\n```js\nyourModule\n  .config(function($stateProvider) {\n    $stateProvider\n      .state(\'articles\', {\n        url: \'/articles\',\n        template: \'everyone can see these great articles\',\n        auth: false // you could omit this, it just documents here\n      })\n      .state(\'new_article\', {\n        url: \'/newarticle\',\n        template: \'form only for those who can write\',\n        auth: {\n          create: \'article\'\n        }\n      });\n\n  }) \n```\n\nThe auth property can take a boolean, function or an object. If you pass `true` to auth it will ensure the user has logged in. An object lets you specify the nouns and verbs that the user must have access to to load the route. You can also pass auth a function. If you return true from that function, the user will be allowed to enter the state. The function\'s `this` is bound to the state change event. It is passed the `user` object and the `next` state.\n\nOur module will broadcast a `NOT_AUTHORIZED` event on the root scope if a user goes to a route they are not authorized to see. We will broadcast a `NOT_AUTHENTICATED` event if a user that hasn\'t logged in attempts to see a route that has a truthy auth property.\n\nWith these events you can configure the behavior of failed route loads.\n',
+21 silly publish   readmeFilename: 'readme.md',
+21 silly publish   gitHead: 'dcd96d80e3133dea972a9aecef16d9e8c9d75bb7',
+21 silly publish   bugs: { url: 'https://github.com/zekenie/dmv/issues' },
+21 silly publish   homepage: 'https://github.com/zekenie/dmv#readme',
+21 silly publish   _id: 'dmv@1.2.3',
+21 silly publish   _shasum: '50baa41aa90c584a978875867f0208a1e4f479ce',
+21 silly publish   _from: '.' }
+22 verbose getPublishConfig undefined
+23 silly mapToRegistry name dmv
+24 silly mapToRegistry using default registry
+25 silly mapToRegistry registry https://registry.npmjs.org/
+26 silly mapToRegistry data Result {
+26 silly mapToRegistry   raw: 'dmv',
+26 silly mapToRegistry   scope: null,
+26 silly mapToRegistry   name: 'dmv',
+26 silly mapToRegistry   rawSpec: '',
+26 silly mapToRegistry   spec: 'latest',
+26 silly mapToRegistry   type: 'tag' }
+27 silly mapToRegistry uri https://registry.npmjs.org/dmv
+28 verbose publish registryBase https://registry.npmjs.org/
+29 silly publish uploading /Users/zekenierenberg/.npm/dmv/1.2.3/package.tgz
+30 verbose request uri https://registry.npmjs.org/dmv
+31 verbose request sending authorization for write operation
+32 info attempt registry request try #1 at 12:21:28 PM
+33 verbose request id 5dcc98ce6f5fbfcb
+34 http request PUT https://registry.npmjs.org/dmv
+35 http 403 https://registry.npmjs.org/dmv
+36 verbose headers { 'content-type': 'application/json',
+36 verbose headers   'cache-control': 'max-age=300',
+36 verbose headers   'content-length': '95',
+36 verbose headers   'accept-ranges': 'bytes',
+36 verbose headers   date: 'Tue, 17 May 2016 17:21:29 GMT',
+36 verbose headers   via: '1.1 varnish',
+36 verbose headers   connection: 'keep-alive',
+36 verbose headers   'x-served-by': 'cache-ord1743-ORD',
+36 verbose headers   'x-cache': 'MISS',
+36 verbose headers   'x-cache-hits': '0',
+36 verbose headers   'x-timer': 'S1463505688.327790,VS0,VE1315',
+36 verbose headers   vary: 'Accept-Encoding' }
+37 verbose request invalidating /Users/zekenierenberg/.npm/registry.npmjs.org/dmv on PUT
+38 error publish Failed PUT 403
+39 verbose stack Error: "You cannot publish over the previously published version 1.2.3." : dmv
+39 verbose stack     at makeError (/Users/zekenierenberg/.nvm/versions/v6.0.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:264:12)
+39 verbose stack     at CachingRegistryClient.<anonymous> (/Users/zekenierenberg/.nvm/versions/v6.0.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:252:14)
+39 verbose stack     at Request._callback (/Users/zekenierenberg/.nvm/versions/v6.0.0/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:172:14)
+39 verbose stack     at Request.self.callback (/Users/zekenierenberg/.nvm/versions/v6.0.0/lib/node_modules/npm/node_modules/request/request.js:199:22)
+39 verbose stack     at emitTwo (events.js:106:13)
+39 verbose stack     at Request.emit (events.js:191:7)
+39 verbose stack     at Request.<anonymous> (/Users/zekenierenberg/.nvm/versions/v6.0.0/lib/node_modules/npm/node_modules/request/request.js:1036:10)
+39 verbose stack     at emitOne (events.js:101:20)
+39 verbose stack     at Request.emit (events.js:188:7)
+39 verbose stack     at IncomingMessage.<anonymous> (/Users/zekenierenberg/.nvm/versions/v6.0.0/lib/node_modules/npm/node_modules/request/request.js:963:12)
+40 verbose statusCode 403
+41 verbose pkgid dmv
+42 verbose cwd /Users/zekenierenberg/dmv
+43 error Darwin 15.0.0
+44 error argv "/Users/zekenierenberg/.nvm/versions/v6.0.0/bin/node" "/Users/zekenierenberg/.nvm/versions/v6.0.0/bin/npm" "publish"
+45 error node v6.0.0
+46 error npm  v3.8.6
+47 error code E403
+48 error "You cannot publish over the previously published version 1.2.3." : dmv
+49 error If you need help, you may report this error at:
+49 error     <https://github.com/npm/npm/issues>
+50 verbose exit [ 1, true ]
