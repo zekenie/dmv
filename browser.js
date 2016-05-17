@@ -113,7 +113,7 @@
 	 * @return {Iterator<Noun>}
 	 */
 	exports.getAllNouns = function () {
-	  return nouns.values();
+	  return Array.from(nouns.values());
 	};
 	
 	exports.getNoun = nouns.get.bind(nouns);
@@ -563,7 +563,7 @@
 	    return this.roles.indexOf(r) !== -1;
 	  } else if (Array.isArray(r)) {
 	    return !r.some(function (role) {
-	      return !_this.roles.includes(role);
+	      return _this.roles.indexOf(role) === -1;
 	    });
 	  }
 	};
