@@ -15,7 +15,10 @@ module.exports = {
         loader: 'babel',
         exclude: [path.resolve(__dirname, './node_modules')],
         query: {
-          presets: ['es2016']
+          presets: ['es2016'],
+          plugins: ['babel-plugin-transform-builtin-extend', {
+            globals: ['Map']
+          }]
         }
       },
       {
