@@ -32,6 +32,6 @@ exports.hasRole = function(r) {
   if (typeof r === 'string'){
     return this.roles.indexOf(r) !== -1;
   } else if (Array.isArray(r)) {
-    return !r.some(role => !this.roles.includes(role))
+    return !r.some(role => this.roles.indexOf(role) === -1)
   }
 };
