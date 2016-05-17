@@ -12,7 +12,6 @@
 
 const dmv = require('./dmv');
 const roleManager = require('./roleManager');
-const angular = require('angular');
 const canMixin = require('./canMixin');
 
 angular.module('dmv', [])
@@ -66,3 +65,4 @@ angular.module('dmv', [])
     };
 
   });
+
