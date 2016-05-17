@@ -83,7 +83,7 @@
 	    store.set(name, new Constructor(name));
 	  }
 	  var instance = store.get(name);
-	  if (undefined.setupRan) {
+	  if (this.setupRan) {
 	    instance.setupRan = true;
 	  }
 	  if (after) {

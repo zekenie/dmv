@@ -16,7 +16,7 @@ const NounManager = require('./nounManager');
 const nouns = require('./nouns');
 const roles = require('./roles');
 
-const addEntity = (store, Constructor, name, after) => {
+const addEntity = function (store, Constructor, name, after) {
   if(!store.get(name)) { store.set(name, new Constructor(name)); }
   const instance = store.get(name);
   if(this.setupRan) { instance.setupRan = true; }
