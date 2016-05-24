@@ -3,6 +3,7 @@ const path = require('path');
 
 module.exports = {
   context: __dirname,
+  devtool: 'source-map',
   entry: './bundle.js',
   output: {
     path: __dirname,
@@ -10,6 +11,11 @@ module.exports = {
   },
   module: {
     loaders: [
+      {
+        test: /(\.js)$/,
+        loader: "eslint-loader",
+        exclude: /node_modules/
+      },
       {
         test: /\.js?$/,
         loader: 'babel',

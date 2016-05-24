@@ -24,7 +24,7 @@ rules:
   no-empty: 2
   no-empty-character-class: 2
   no-ex-assign: 2
-  no-extra-boolean-cast: 2
+  no-extra-boolean-cast: 0
   no-extra-parens: 0
   no-extra-semi: 2
   no-func-assign: 2
@@ -44,20 +44,20 @@ rules:
   # Best Practices
   accessor-pairs: 2
   block-scoped-var: 0
-  complexity: [2, 6]
+  complexity: 1
   consistent-return: 0
   curly: 0
   default-case: 0
   dot-location: 0
   dot-notation: 0
   eqeqeq: 2
-  guard-for-in: 2
+  guard-for-in: 1
   no-alert: 2
   no-caller: 2
   no-case-declarations: 2
   no-div-regex: 2
   no-else-return: 0
-  no-empty-label: 2
+  no-labels: 2
   no-empty-pattern: 2
   no-eq-null: 2
   no-eval: 2
@@ -69,7 +69,6 @@ rules:
   no-implied-eval: 2
   no-invalid-this: 0
   no-iterator: 2
-  no-labels: 0
   no-lone-blocks: 2
   no-loop-func: 2
   no-magic-number: 0
@@ -81,14 +80,14 @@ rules:
   no-new: 2
   no-octal-escape: 2
   no-octal: 2
-  no-proto: 2
+  no-proto: 0
   no-redeclare: 2
   no-return-assign: 2
   no-script-url: 2
   no-self-compare: 2
   no-sequences: 0
   no-throw-literal: 0
-  no-unused-expressions: 2
+  no-unused-expressions: 0
   no-useless-call: 2
   no-useless-concat: 2
   no-void: 2
@@ -96,7 +95,7 @@ rules:
   no-with: 2
   radix: 2
   vars-on-top: 0
-  wrap-iife: 2
+  wrap-iife: 0
   yoda: 0
 
   # Strict
@@ -117,7 +116,7 @@ rules:
 
   # Node.js and CommonJS
   callback-return: 2
-  global-require: 2
+  global-require: 0
   handle-callback-err: 2
   no-mixed-requires: 0
   no-new-require: 0

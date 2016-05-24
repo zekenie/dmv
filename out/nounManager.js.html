@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: canMixin.js</title>
+    <title>JSDoc: Source: nounManager.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: canMixin.js</h1>
+    <h1 class="page-title">Source: nounManager.js</h1>
 
     
 
@@ -28,41 +28,18 @@
         <article>
             <pre class="prettyprint source linenums"><code>'use strict';
 
-const roles = require('./roles');
-
-const onPermissionList = (list, verb, noun) => {
-  return list &amp;&amp; !!list.find(item => item.verb === verb &amp;&amp; item.noun === noun);
-};
-
-/**
- * Checks if a user has the ability to perform an action on a noun
- * @memberOf plugins/mongoose
- * @param  {string} verb
- * @param  {string} noun
- * @return {boolean}
- */
-exports.can = function(verb, noun) {
-  if(onPermissionList(this.permissionWhiteList, verb, noun)) {
-    return true;
-  } else if(onPermissionList(this.permissionBlackList, verb, noun)) {
-    return false;
-  } else {
-    return roles.can(this.roles, verb, noun);
+/** @todo  extends Map */
+class NounManager {
+  constructor() {
+    this.map = new Map();
+    this.set = this.map.set.bind(this.map);
+    this.get = this.map.get.bind(this.map);
+    this.has = this.map.has.bind(this.map);
+    this.values = this.map.values.bind(this.map);
   }
-};
+}
 
-/**
- * Determines if user has role or roles
- * @param  {String|Array}  r role
- * @return {Boolean}
- */
-exports.hasRole = function(r) {
-  if (typeof r === 'string'){
-    return this.roles.indexOf(r) !== -1;
-  } else if (Array.isArray(r)) {
-    return !r.some(role => this.roles.indexOf(role) === -1)
-  }
-};</code></pre>
+module.exports = NounManager;</code></pre>
         </article>
     </section>
 
