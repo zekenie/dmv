@@ -44,6 +44,7 @@ for (let i = 0; i < 2; i++) {
       }
 
       dmv = mock.reRequire('../dmv');
+      dmv.reset();
     });
 
     describe('noun', function () {
