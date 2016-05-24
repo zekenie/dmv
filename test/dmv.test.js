@@ -7,12 +7,12 @@ let nouns = require('../nouns');
 let roles = require('../roles');
 let dmv = require('../dmv');
 
-const entityConstructor = function (name) {
+const Entity = function (name) {
   this.name = name;
   this._afterSetup = function (after) {
     after.call(this, this);
   };
-  this.setup = function () {};
+  this.setup = sinon.spy();
   this.setupRan = false;
 };
 
@@ -25,28 +25,64 @@ for (let i = 0; i < 2; i++) {
   describe(i === 0 ? 'dmv unit testing' : 'dmv integration testing', () => {
 
     before(i === 0 ? 'set up mocks' : 'require live dependencies', () => {
-      if (i === 0) setUpMocks();
-      else mock.stopAll();
-
-      function setUpMocks() {
-        mock('../noun', entityConstructor);
-        mock('../role', entityConstructor);
+      if (i === 0) {
+        mock('../noun', Entity);
+        mock('../role', Entity);
         mock('../nouns', nouns = new Map());
         mock('../roles', roles = new Map());
+      } else {
+        mock.stopAll();
+        nouns = require('../nouns');
+        roles = require('../roles');
       }
 
       dmv = mock.reRequire('../dmv');
-      dmv.reset();
-      // TODO: remove this reset
+    });
+
+    describe('setup functionality', () => {
+      before('prefill nouns and roles and wait for setTimeout to run', (done) => {
+        ['dog', 'bog', 'cog', 'fog'].forEach((noun) => nouns.set(noun, new Entity(noun)));
+        ['user', 'admin', 'guest'].forEach((role) => roles.set(role, new Entity(role)));
+        let doneCalled = false;
+        setInterval(() => {
+          if (dmv.setupRan && !doneCalled) {
+            done();
+            doneCalled = true;
+          }
+        }, 10);
+      });
+
+      after('empty nouns and roles', () => {
+        nouns.clear();
+        roles.clear();
+      });
+
+      it('runs setup on all entities that are already stored by nouns and roles', (done) => {
+        setTimeout(() => {
+          const allNouns = nouns.values();
+          const allRoles = roles.values();
+          for (const noun of allNouns) {
+            sinon.assert.calledOnce(noun.setup);
+          }
+          for (const role of allRoles) {
+            sinon.assert.calledOnce(role.setup);
+          }
+          done();
+        });
+      });
     });
 
     describe('noun', () => {
       let cat;
       let spy;
 
-      beforeEach('invoke noun', () => {
+      before('invoke noun', () => {
         spy = sinon.spy();
         cat = dmv.noun('cat', spy);
+      });
+
+      after('empty nouns', () => {
+        nouns.clear();
       });
 
       it('adds a noun to nouns', () => {
@@ -56,15 +92,11 @@ for (let i = 0; i < 2; i++) {
       });
 
       it('changes setupRan to true for all newly added nouns', () => {
-        setTimeout(() => {
-          expect(cat.setupRan).to.be.true;
-        }, 0);
+        expect(cat.setupRan).to.be.true;
       });
 
       it('runs any functions passed in as the "after" parameter', function () {
-        setTimeout(() => {
-          sinon.assert.calledWith(spy, cat);
-        }, 0);
+        sinon.assert.calledWith(spy, cat);
       });
 
       it('returns the noun', () => {
@@ -82,6 +114,10 @@ for (let i = 0; i < 2; i++) {
         owner = dmv.role('owner', spy);
       });
 
+      after('empty roles', () => {
+        roles.clear();
+      });
+
       it('adds a role to roles', () => {
         const retrieved = roles.get('owner');
         expect(retrieved).to.be.an('object');
@@ -89,9 +125,7 @@ for (let i = 0; i < 2; i++) {
       });
 
       it('changes setupRan to true for all newly added roles', () => {
-        setTimeout(() => {
-          expect(owner.setupRan).to.be.true;
-        }, 0);
+        expect(owner.setupRan).to.be.true;
       });
 
       it('runs any functions passed in as the "after" parameter', () => {
@@ -105,17 +139,19 @@ for (let i = 0; i < 2; i++) {
     });
 
     describe('getAllNouns', () => {
-      let nouns;
 
       before('register nouns', () => {
-        nouns = ['cat', 'bat', 'rat', 'mat'];
-        nouns.forEach((noun) => dmv.noun(noun));
+        ['cat', 'bat', 'rat', 'mat'].forEach((noun) => dmv.noun(noun));
+      });
+
+      after('empty nouns', () => {
+        nouns.clear();
       });
 
       it('returns all nouns that have been registered', () => {
         const allNouns = dmv.getAllNouns();
         let counter = 0;
-        for (let noun of allNouns) {
+        for (const noun of allNouns) {
           counter++;
           expect(noun).to.be.an('object');
           expect(noun).to.have.property('setup');
@@ -125,41 +161,66 @@ for (let i = 0; i < 2; i++) {
     });
 
     describe('getNoun', () => {
+
+      after('empty nouns', () => {
+        nouns.clear();
+      });
+
       it('returns an undefined value if a noun is not registered', () => {
-        let dog = dmv.getNoun('dog');
+        const dog = dmv.getNoun('dog');
         expect(dog).to.be.undefined;
       });
 
       it('returns a noun if it is registered', () => {
         dmv.noun('cat');
-        let cat = dmv.getNoun('cat');
+        const cat = dmv.getNoun('cat');
         expect(cat).to.be.an('object');
         expect(cat).to.have.property('name', 'cat');
       });
     });
 
     describe('getRole', () => {
-      it('returns an undefined value if a noun is not registered', () => {
-        let user = dmv.getRole('user');
+
+      after('empty roles', () => {
+        roles.clear();
+      });
+
+      it('returns an undefined value if a role is not registered', () => {
+        const user = dmv.getRole('user');
         expect(user).to.be.undefined;
       });
 
-      it('returns a noun if it is registered', () => {
+      it('returns a role if it is registered', () => {
         dmv.role('owner');
-        let owner = dmv.getRole('owner');
+        const owner = dmv.getRole('owner');
         expect(owner).to.be.an('object');
         expect(owner).to.have.property('name', 'owner');
       });
     });
 
-    describe('setup functionality', () => {
+    describe('reset', () => {
+      before('prefill nouns and roles', () => {
+        ['dog', 'bog', 'cog', 'fog'].forEach((noun) => nouns.set(noun, new Entity(noun)));
+        ['user', 'admin', 'guest'].forEach((role) => roles.set(role, new Entity(role)));
+      });
 
-      it('runs setup on all entities that are already stored by nouns and roles', () => {
-        // dmv.reset();
-        console.log('Nouns:', nouns.values(), "Roles:", roles.values());
+      it('empties the nouns and roles collections', () => {
+        dmv.reset();
+        const allNouns = nouns.values();
+        const allRoles = roles.values();
+        let counter = 0;
+
+        for (const noun of allNouns) {
+          counter++;
+        }
+        expect(counter).to.equal(0);
+        
+        counter = 0;
+        for (const role of allRoles) {
+          counter++;
+        }
+        expect(counter).to.equal(0);
       });
     });
-
   });
-
 }
