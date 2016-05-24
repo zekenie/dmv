@@ -3,10 +3,18 @@ const mock = require('mock-require');
 const chai = require('chai');
 const expect = chai.expect;
 const sinon = require('sinon');
-const Role = require('../Role');
 let nouns = require('../nouns');
 let roles = require('../roles');
 let dmv = require('../dmv');
+
+const entityConstructor = function (name) {
+  this.name = name;
+  this._afterSetup = function (after) {
+    after.call(this, this);
+  };
+  this.setup = function () {};
+  this.setupRan = false;
+};
 
 for (let i = 0; i < 2; i++) {
 
@@ -14,112 +22,97 @@ for (let i = 0; i < 2; i++) {
   // dependencies are stubbed or mocked. On the second pass (integration testing),
   // dependencies are fulfilled by DMV's actual modules.
 
-  describe(i === 0 ? 'dmv unit testing' : 'dmv integration testing', function () {
+  describe(i === 0 ? 'dmv unit testing' : 'dmv integration testing', () => {
 
-    before(i === 0 ? 'set up mocks' : 'require live dependencies', function () {
+    before(i === 0 ? 'set up mocks' : 'require live dependencies', () => {
       if (i === 0) setUpMocks();
-      else restoreMocks();
+      else mock.stopAll();
 
       function setUpMocks() {
-        const entityConstructor = function (name) {
-          this.name = name;
-          this._afterSetup = function (after) {
-            after.call(this, this);
-          };
-          this.setup = function () {};
-          this.setupRan = false;
-        };
-        nouns = new Map();
-        roles = new Map();
-        mock('../nouns', nouns);
-        mock('../roles', roles);
         mock('../noun', entityConstructor);
         mock('../role', entityConstructor);
-      }
-
-      function restoreMocks() {
-        mock.stopAll();
-        nouns = require('../nouns');
-        roles = require('../roles');
+        mock('../nouns', nouns = new Map());
+        mock('../roles', roles = new Map());
       }
 
       dmv = mock.reRequire('../dmv');
       dmv.reset();
+      // TODO: remove this reset
     });
 
-    describe('noun', function () {
+    describe('noun', () => {
       let cat;
       let spy;
 
-      beforeEach('invoke noun', function () {
+      beforeEach('invoke noun', () => {
         spy = sinon.spy();
         cat = dmv.noun('cat', spy);
       });
 
-      it('adds a noun to nouns', function () {
+      it('adds a noun to nouns', () => {
         const retrieved = nouns.get('cat');
         expect(retrieved).to.be.an('object');
         expect(retrieved).to.have.property('name', 'cat');
       });
 
-      it('changes setupRan to true for all newly added nouns', function () {
-        setTimeout(function () {
+      it('changes setupRan to true for all newly added nouns', () => {
+        setTimeout(() => {
           expect(cat.setupRan).to.be.true;
         }, 0);
       });
 
       it('runs any functions passed in as the "after" parameter', function () {
-        setTimeout(function () {
+        setTimeout(() => {
           sinon.assert.calledWith(spy, cat);
         }, 0);
       });
 
-      it('returns the noun', function () {
+      it('returns the noun', () => {
         expect(cat).to.be.an('object');
         expect(cat).to.have.property('name', 'cat');
       });
     });
 
-    describe('role', function () {
+    describe('role', () => {
       let owner;
       let spy;
 
-      before('invoke role', function () {
+      before('invoke role', () => {
         spy = sinon.spy();
         owner = dmv.role('owner', spy);
       });
 
-      it('adds a role to roles', function () {
+      it('adds a role to roles', () => {
         const retrieved = roles.get('owner');
         expect(retrieved).to.be.an('object');
         expect(retrieved).to.have.property('name', 'owner');
       });
 
-      it('changes setupRan to true for all newly added roles', function () {
-        setTimeout(function () {
+      it('changes setupRan to true for all newly added roles', () => {
+        setTimeout(() => {
           expect(owner.setupRan).to.be.true;
         }, 0);
       });
 
-      it('runs any functions passed in as the "after" parameter', function () {
+      it('runs any functions passed in as the "after" parameter', () => {
         sinon.assert.calledWith(spy, owner);
       });
 
-      it('returns the role', function () {
+      it('returns the role', () => {
         expect(owner).to.be.an('object');
         expect(owner).to.have.property('name', 'owner');
       });
     });
 
-    describe('getAllNouns', function () {
+    describe('getAllNouns', () => {
       let nouns;
 
-      before('register nouns', function () {
+      before('register nouns', () => {
         nouns = ['cat', 'bat', 'rat', 'mat'];
         nouns.forEach((noun) => dmv.noun(noun));
       });
 
-      it('returns all nouns that have been registered', function () {
+      it('returns all nouns that have been registered', () => {
         const allNouns = dmv.getAllNouns();
         let counter = 0;
         for (let noun of allNouns) {
@@ -131,13 +124,13 @@ for (let i = 0; i < 2; i++) {
       });
     });
 
-    describe('getNoun', function () {
-      it('returns an undefined value if a noun is not registered', function () {
+    describe('getNoun', () => {
+      it('returns an undefined value if a noun is not registered', () => {
         let dog = dmv.getNoun('dog');
         expect(dog).to.be.undefined;
       });
 
-      it('returns a noun if it is registered', function () {
+      it('returns a noun if it is registered', () => {
         dmv.noun('cat');
         let cat = dmv.getNoun('cat');
         expect(cat).to.be.an('object');
@@ -145,13 +138,13 @@ for (let i = 0; i < 2; i++) {
       });
     });
 
-    describe('getRole', function () {
-      it('returns an undefined value if a noun is not registered', function () {
+    describe('getRole', () => {
+      it('returns an undefined value if a noun is not registered', () => {
         let user = dmv.getRole('user');
         expect(user).to.be.undefined;
       });
 
-      it('returns a noun if it is registered', function () {
+      it('returns a noun if it is registered', () => {
         dmv.role('owner');
         let owner = dmv.getRole('owner');
         expect(owner).to.be.an('object');
@@ -159,8 +152,10 @@ for (let i = 0; i < 2; i++) {
       });
     });
 
-    describe('setup functionality', function () {
-      it('runs setup on all entities that are already stored by nouns and roles', function () {
+    describe('setup functionality', () => {
+
+      it('runs setup on all entities that are already stored by nouns and roles', () => {
+        // dmv.reset();
         console.log('Nouns:', nouns.values(), "Roles:", roles.values());
       });
     });
