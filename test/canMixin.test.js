@@ -16,6 +16,10 @@ describe('canMixin', () => {
     });
   });
 
+  after(() => {
+    dmv.reset();
+  });
+
   describe('can', () => {
     it('is true for something on the whitelist', () => {
       const user = {
