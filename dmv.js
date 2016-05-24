@@ -51,6 +51,13 @@ exports.getAllNouns = function() {
 exports.getNoun = nouns.get.bind(nouns);
 exports.getRole = roles.get.bind(roles);
 
+/**
+* Empty nouns and roles, resetting dmv. Use with caution.
+*/
+exports.reset = function () {
+  nouns.clear();
+  roles.clear();
+};
 
 setTimeout(function() {
   var entities = Array.from(nouns.values()).concat(Array.from(roles.values()));
