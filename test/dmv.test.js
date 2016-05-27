@@ -36,20 +36,22 @@ for (let i = 0; i < 2; i++) {
         roles = require('../roles');
       }
 
+      // prefill nouns and roles to prepare testing for setup functionality
+      ['dog', 'bog', 'cog', 'fog'].forEach((noun) => nouns.set(noun, new Entity(noun)));
+      ['user', 'admin', 'guest'].forEach((role) => roles.set(role, new Entity(role)));
+
       dmv = mock.reRequire('../dmv');
     });
 
     describe('setup functionality', () => {
-      before('prefill nouns and roles and wait for setTimeout to run', (done) => {
-        ['dog', 'bog', 'cog', 'fog'].forEach((noun) => nouns.set(noun, new Entity(noun)));
-        ['user', 'admin', 'guest'].forEach((role) => roles.set(role, new Entity(role)));
+      before('wait for setTimeout to run', (done) => {
         let doneCalled = false;
         setInterval(() => {
           if (dmv.setupRan && !doneCalled) {
             done();
             doneCalled = true;
           }
-        }, 10);
+        }, 0.01);
       });
 
       after('empty nouns and roles', () => {
@@ -214,7 +216,7 @@ for (let i = 0; i < 2; i++) {
           counter++;
         }
         expect(counter).to.equal(0);
-        
+
         counter = 0;
         for (const role of allRoles) {
           counter++;

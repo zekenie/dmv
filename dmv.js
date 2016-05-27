@@ -61,7 +61,6 @@ exports.reset = function () {
 
 setTimeout(function() {
   var entities = Array.from(nouns.values()).concat(Array.from(roles.values()));
-  
   entities.forEach( (instance) => instance.setup() );
   exports.setupRan = true;
 }, 0);
