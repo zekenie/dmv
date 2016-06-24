@@ -1,6 +1,6 @@
 {
   "name": "dmv",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "description": "A MEAN stack role/permission management system",
   "author": "Zeke Nierenberg",
   "repository": "https://github.com/zekenie/dmv",

@@ -1,4 +1,14 @@
-/******/ (function(modules) { // webpackBootstrap
+(function webpackUniversalModuleDefinition(root, factory) {
+	if(typeof exports === 'object' && typeof module === 'object')
+		module.exports = factory();
+	else if(typeof define === 'function' && define.amd)
+		define([], factory);
+	else if(typeof exports === 'object')
+		exports["dmv"] = factory();
+	else
+		root["dmv"] = factory();
+})(this, function() {
+return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
 /******/
@@ -48,8 +58,7 @@
 	
 	// we need to expose the dmv api
 	
-	window.dmv = __webpack_require__(1);
-	module.exports = window.dmv;
+	module.exports = __webpack_require__(1);
 	// angular code just needs to run. it will register module with angular
 	if (typeof angular !== 'undefined') {
 	  __webpack_require__(9);
@@ -119,9 +128,16 @@
 	exports.getNoun = nouns.get.bind(nouns);
 	exports.getRole = roles.get.bind(roles);
 	
+	/**
+	* Empty nouns and roles, resetting dmv. Use with caution.
+	*/
+	exports.reset = function () {
+	  nouns.clear();
+	  roles.clear();
+	};
+	
 	setTimeout(function () {
 	  var entities = Array.from(nouns.values()).concat(Array.from(roles.values()));
-	
 	  entities.forEach(function (instance) {
 	    return instance.setup();
 	  });
@@ -388,6 +404,7 @@
 	  this.get = this.map.get.bind(this.map);
 	  this.has = this.map.has.bind(this.map);
 	  this.values = this.map.values.bind(this.map);
+	  this.clear = this.map.clear.bind(this.map);
 	};
 	
 	module.exports = NounManager;
@@ -416,6 +433,7 @@
 	    this.get = this.map.get.bind(this.map);
 	    this.has = this.map.has.bind(this.map);
 	    this.values = this.map.values.bind(this.map);
+	    this.clear = this.map.clear.bind(this.map);
 	  }
 	
 	  _createClass(RoleManager, [{
@@ -571,5 +589,7 @@
 	};
 
 /***/ }
-/******/ ]);
+/******/ ])
+});
+;
 //# sourceMappingURL=browser.js.map
