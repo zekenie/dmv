@@ -7,6 +7,8 @@ module.exports = {
   entry: './bundle.js',
   output: {
     path: __dirname,
+    library: 'dmv',
+    libraryTarget: 'umd',
     filename: './browser.js'
   },
   module: {
