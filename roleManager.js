@@ -16,8 +16,8 @@ class RoleManager {
     this.clear = this.map.clear.bind(this.map);
   }
   can(roles, verb, noun) {
-    return roles.every(r => this.has(r)) && 
-    roles.some(r => this.get(r).can(verb, noun));
+    return roles.map(r => this.get(r) || { can: () => false })
+      .some(r => r.can(verb, noun));
   }
 }
 
