@@ -23,11 +23,22 @@ angular.module('dmv', [])
   .factory('authConfig', function($rootScope, $injector) {
 
     let userGetterMethod = function() {};
+    let asyncUserGetterMethod = function() {};
+    let canGetUserAsync = false;
+
     const getUser = function() {
       return $injector.invoke(userGetterMethod);
     };
+    const getUserAsync = function() {
+      canGetUserAsync = true;
+      return $injector.invoke(asyncUserGetterMethod);
+    };
 
     return {
+      getUserAsync: function(fn) {
+        asyncUserGetterMethod = fn;
+        canGetUserAsync = true;
+      },
       getUser: function(fn) {
         userGetterMethod = fn;
 
@@ -48,7 +59,10 @@ angular.module('dmv', [])
 
 
         $rootScope.$on('$stateChangeStart', function(event, next) {
-          const user = getUser();
+          let user = getUser();
+          if (canGetUserAsync) {
+            user = getUserAsync();
+          }
           return Promise.resolve(user)
             .then(user => {
               if(next && next.auth) {

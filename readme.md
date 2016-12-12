@@ -196,7 +196,7 @@ yourModule.factory('YourUserClass', funciton($httpMaybe?, canPlugin) {
 
 You can call `can` on any of your user instances. In addition, we've added a `hasRole` method on your user class.
 
-You need to tell dmv how to find your logged in user. We've exposed a method called `getUser` on our `authConfig` factory. The `getUser` method may return your user synchronously, or a Promise for your user. You can inject your own angular services. You just need to return your user. The `getUser` method also attaches `can` and `hasRole` to your `$rootScope` so you can show and hide view segments easily.
+You need to tell dmv how to find your logged in user. We've exposed a method called `getUser` on our `authConfig` factory. The `getUser` method should return your user synchronously. You can inject your own angular services. You just need to return your user. The `getUser` method also attaches `can` and `hasRole` to your `$rootScope` so you can show and hide view segments easily.
 
 ```js
 yourModule
@@ -236,3 +236,23 @@ The auth property can take a boolean, function or an object. If you pass `true` 
 Our module will broadcast a `NOT_AUTHORIZED` event on the root scope if a user goes to a route they are not authorized to see. We will broadcast a `NOT_AUTHENTICATED` event if a user that hasn't logged in attempts to see a route that has a truthy auth property.
 
 With these events you can configure the behavior of failed route loads.
+
+If you would like the auth property to be evaluated only after the user has been fetched asynchronously, you may pass a method that returns a Promise for your user to the `authConfig` via the `getUserAsync` method.
+
+```js
+yourModule
+  .run(function(authConfig) {
+
+    // optionally tell dmv how to get the user asynchronously
+    authConfig.getUserAsync(function (YourUserService, YourAuthService) {
+      return YourAuthService.getLoggedInUserAsync();
+    })
+
+    // you still must tell dmv how to get the user synchronously - it is required!
+    authConfig.getUser(function(YourUserService, YourAuthService) {
+      return YourAuthService.getLoggedInUser();
+    })
+  })
+  
+```
+If an asynchronous method is present, `dmv` will use it to obtain the user before evaluating the auth property. Note any front-end caching is the responsibility of your Angular services - `dmv` will only expect to receive a Promise for the user.
