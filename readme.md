@@ -196,7 +196,7 @@ yourModule.factory('YourUserClass', funciton($httpMaybe?, canPlugin) {
 
 You can call `can` on any of your user instances. In addition, we've added a `hasRole` method on your user class.
 
-You need to tell dmv how to find your logged in user. We've exposed a method called `getUser` on our `authConfig` factory. You can inject your own angular services. You just need to return your user. The `getUser` method also attaches `can` and `hasRole` to your `$rootScope` so you can show and hide view segments easily.
+You need to tell dmv how to find your logged in user. We've exposed a method called `getUser` on our `authConfig` factory. The `getUser` method may return your user synchronously, or a Promise for your user. You can inject your own angular services. You just need to return your user. The `getUser` method also attaches `can` and `hasRole` to your `$rootScope` so you can show and hide view segments easily.
 
 ```js
 yourModule
