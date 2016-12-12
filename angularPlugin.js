@@ -30,7 +30,6 @@ angular.module('dmv', [])
       return $injector.invoke(userGetterMethod);
     };
     const getUserAsync = function() {
-      canGetUserAsync = true;
       return $injector.invoke(asyncUserGetterMethod);
     };
 
