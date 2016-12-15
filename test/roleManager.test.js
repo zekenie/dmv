@@ -32,10 +32,6 @@ describe('roleManager', function () {
       roles.set('god', god);
     });
 
-    it('returns false if any roles in the arguments have not been set', function () {
-      expect(roles.can(['owner', 'god', 'catsitter'], 'pet', 'cat')).to.be.false;
-    });
-
     it('returns true if at least one role has the required permissions', function () {
       expect(roles.can(['owner', 'god'], 'create', 'cat')).to.be.true;
     });
