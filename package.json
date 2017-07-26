@@ -1,24 +1,23 @@
 {
   "name": "dmv",
-  "version": "1.3.4",
+  "version": "2.0.0",
   "description": "A MEAN stack role/permission management system",
   "author": "Zeke Nierenberg",
   "repository": "https://github.com/zekenie/dmv",
   "main": "index.js",
   "engines": {
-    "node": "^6.0.0"
+    "node": "7.10.1"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha",
-    "doc": "./node_modules/.bin/jsdoc -c ./jsdoc.conf.json",
-    "bundle": "./node_modules/.bin/webpack",
-    "build": "npm run doc && npm run bundle"
+    "test": "mocha",
+    "doc": "jsdoc -c ./jsdoc.conf.json",
+    "bundle": "webpack",
+    "build": "npm run doc && npm run bundle",
+    "deploy": "yarn; webpack; git add --all; git commit -m 'deploying'; git push origin master && git push fury master"
   },
   "keywords": [],
   "license": "ISC",
   "devDependencies": {
-    "angular": "^1.5.5",
-    "angular-ui-router": "^0.2.15",
     "babel-core": "^6.8.0",
     "babel-loader": "^6.2.4",
     "babel-preset-es2016": "^6.0.11",
@@ -33,7 +32,8 @@
     "mongoose": "^4.2.6",
     "ng-annotate-loader": "0.1.0",
     "sinon": "^1.17.3",
-    "webpack": "^1.13.0"
+    "webpack": "^1.13.0",
+    "yarn": "^0.27.5"
   },
   "dependencies": {}
 }
