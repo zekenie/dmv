@@ -23,11 +23,21 @@ angular.module('dmv', [])
   .factory('authConfig', function($rootScope, $injector) {
 
     let userGetterMethod = function() {};
+    let asyncUserGetterMethod = function() {};
+    let canGetUserAsync = false;
+
     const getUser = function() {
       return $injector.invoke(userGetterMethod);
     };
+    const getUserAsync = function() {
+      return $injector.invoke(asyncUserGetterMethod);
+    };
 
     return {
+      getUserAsync: function(fn) {
+        asyncUserGetterMethod = fn;
+        canGetUserAsync = true;
+      },
       getUser: function(fn) {
         userGetterMethod = fn;
 
@@ -48,32 +58,39 @@ angular.module('dmv', [])
 
 
         $rootScope.$on('$stateChangeStart', function(event, next) {
-          const user = getUser();
-          if(next && next.auth) {
-            if(!user) {
-              $rootScope.$broadcast('NOT_AUTHENTICATED');
-              event.preventDefault();
-              return;
-            }
-            if(next.auth === true) { return; }
-            if(typeof next.auth === 'function') {
-              if(!next.auth.call(event, user, next)) {
-                event.preventDefault();
-                $rootScope.$broadcast('NOT_AUTHORIZED');
-              }
-              return;
-            }
-            for(let verb in next.auth) {
-              if(next.auth.hasOwnProperty(verb)) {
-                let noun = next.auth[verb];
-                if(!user.can(verb, noun)) {
+          let user = getUser();
+          if (canGetUserAsync) {
+            user = getUserAsync();
+          }
+          return Promise.resolve(user)
+            .then(user => {
+              if(next && next.auth) {
+                if(!user) {
+                  $rootScope.$broadcast('NOT_AUTHENTICATED');
                   event.preventDefault();
-                  $rootScope.$broadcast('NOT_AUTHORIZED');
                   return;
                 }
+                if(next.auth === true) { return; }
+                if(typeof next.auth === 'function') {
+                  if(!next.auth.call(event, user, next)) {
+                    event.preventDefault();
+                    $rootScope.$broadcast('NOT_AUTHORIZED');
+                  }
+                  return;
+                }
+                for(let verb in next.auth) {
+                  if(next.auth.hasOwnProperty(verb)) {
+                    let noun = next.auth[verb];
+                    if(!user.can(verb, noun)) {
+                      event.preventDefault();
+                      $rootScope.$broadcast('NOT_AUTHORIZED');
+                      return;
+                    }
+                  }
+                }
               }
-            }
-          }
+
+            });
         });
       }
     };

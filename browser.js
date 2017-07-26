@@ -79,19 +79,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	'use strict';
 	
-	const Noun = __webpack_require__(2);
-	const Role = __webpack_require__(4);
+	var Noun = __webpack_require__(2);
+	var Role = __webpack_require__(4);
 	
-	const RoleManager = __webpack_require__(7);
-	const NounManager = __webpack_require__(6);
-	const nouns = __webpack_require__(5);
-	const roles = __webpack_require__(8);
+	var RoleManager = __webpack_require__(7);
+	var NounManager = __webpack_require__(6);
+	var nouns = __webpack_require__(5);
+	var roles = __webpack_require__(8);
 	
-	const addEntity = function (store, Constructor, name, after) {
+	var addEntity = function addEntity(store, Constructor, name, after) {
 	  if (!store.get(name)) {
 	    store.set(name, new Constructor(name));
 	  }
-	  const instance = store.get(name);
+	  var instance = store.get(name);
 	  if (this.setupRan) {
 	    instance.setupRan = true;
 	  }
@@ -138,7 +138,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	setTimeout(function () {
 	  var entities = Array.from(nouns.values()).concat(Array.from(roles.values()));
-	  entities.forEach(instance => instance.setup());
+	  entities.forEach(function (instance) {
+	    return instance.setup();
+	  });
 	  exports.setupRan = true;
 	}, 0);
 
@@ -151,17 +153,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @class  Noun
 	 */
 	
-	class Noun extends __webpack_require__(3) {
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Noun = function (_require) {
+	  _inherits(Noun, _require);
+	
 	  /**
 	   * @param  {string} name - name of noun
 	   * @return {noun}        - the created noun
 	   */
-	  constructor(name) {
-	    super();
-	    this.name = name;
-	    this.verbs = new Set();
-	    this.permissions = {};
-	    ['create', 'read', 'update', 'delete'].forEach(v => this.verb(v), this);
+	
+	  function Noun(name) {
+	    _classCallCheck(this, Noun);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Noun).call(this));
+	
+	    _this.name = name;
+	    _this.verbs = new Set();
+	    _this.permissions = {};
+	    ['create', 'read', 'update', 'delete'].forEach(function (v) {
+	      return _this.verb(v);
+	    }, _this);
+	    return _this;
 	  }
 	
 	  /**
@@ -169,52 +188,76 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param  {string}  verb
 	   * @return {Boolean}
 	   */
-	  hasVerb(verb) {
-	    return this.verbs.has(verb);
-	  }
 	
-	  /**
-	   * Adds verb to the set of posible verbs that can be authorized. For example, `post.can('like')` would add the verb 'like' to a noun 'post'
-	   * @param  {string} verb
-	   */
-	  verb(verb) {
-	    this.verbs.add(verb);
-	  }
 	
-	  /**
-	   * Removes a verb from the set of possible verbs. Useful for removing default crud.
-	   * @param  {string} verb
-	   */
-	  removeVerb(verb) {
-	    this.verbs.delete(verb);
-	  }
-	
-	  /**
-	   * Authorizes a role to perform a verb.
-	   * @param  {string} role
-	   * @param  {string[]|string} verbs - Either the string '*', which authorizes all possible verbs to the given role, or an array of verbs to authorize.
-	   */
-	  authorize(role, verbs) {
-	    if (verbs === '*') {
-	      verbs = this.verbs;
-	    } else {
-	      verbs = verbs.filter(v => this.verbs.has(v), this);
+	  _createClass(Noun, [{
+	    key: 'hasVerb',
+	    value: function hasVerb(verb) {
+	      return this.verbs.has(verb);
 	    }
-	    this.permissions[role] = this.permissions[role] || new Set();
-	    verbs.forEach(v => this.permissions[role].add(v));
-	  }
 	
-	  /**
-	   * Checks if a role is regestered and it has the permission
-	   * @param  {string} role
-	   * @param  {string} verb
-	   * @return {boolean}
-	   */
-	  checkAuthorization(role, verb) {
-	    return !!this.permissions[role] && this.permissions[role].has(verb);
-	  }
+	    /**
+	     * Adds verb to the set of posible verbs that can be authorized. For example, `post.can('like')` would add the verb 'like' to a noun 'post'
+	     * @param  {string} verb
+	     */
 	
-	}
+	  }, {
+	    key: 'verb',
+	    value: function verb(_verb) {
+	      this.verbs.add(_verb);
+	    }
+	
+	    /**
+	     * Removes a verb from the set of possible verbs. Useful for removing default crud.
+	     * @param  {string} verb
+	     */
+	
+	  }, {
+	    key: 'removeVerb',
+	    value: function removeVerb(verb) {
+	      this.verbs.delete(verb);
+	    }
+	
+	    /**
+	     * Authorizes a role to perform a verb.
+	     * @param  {string} role
+	     * @param  {string[]|string} verbs - Either the string '*', which authorizes all possible verbs to the given role, or an array of verbs to authorize.
+	     */
+	
+	  }, {
+	    key: 'authorize',
+	    value: function authorize(role, verbs) {
+	      var _this2 = this;
+	
+	      if (verbs === '*') {
+	        verbs = this.verbs;
+	      } else {
+	        verbs = verbs.filter(function (v) {
+	          return _this2.verbs.has(v);
+	        }, this);
+	      }
+	      this.permissions[role] = this.permissions[role] || new Set();
+	      verbs.forEach(function (v) {
+	        return _this2.permissions[role].add(v);
+	      });
+	    }
+	
+	    /**
+	     * Checks if a role is regestered and it has the permission
+	     * @param  {string} role
+	     * @param  {string} verb
+	     * @return {boolean}
+	     */
+	
+	  }, {
+	    key: 'checkAuthorization',
+	    value: function checkAuthorization(role, verb) {
+	      return !!this.permissions[role] && this.permissions[role].has(verb);
+	    }
+	  }]);
+	
+	  return Noun;
+	}(__webpack_require__(3));
 	
 	module.exports = Noun;
 
@@ -224,23 +267,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	module.exports = class AfterSetup {
-	  constructor() {
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	module.exports = function () {
+	  function AfterSetup() {
+	    _classCallCheck(this, AfterSetup);
+	
 	    this._afterSetupFns = [];
 	  }
 	
-	  _afterSetup(fn) {
-	    if (this.setupRan) {
-	      fn.call(this, this);
+	  _createClass(AfterSetup, [{
+	    key: '_afterSetup',
+	    value: function _afterSetup(fn) {
+	      if (this.setupRan) {
+	        fn.call(this, this);
+	      }
+	      this._afterSetupFns.push(fn);
 	    }
-	    this._afterSetupFns.push(fn);
-	  }
+	  }, {
+	    key: 'setup',
+	    value: function setup() {
+	      var _this = this;
 	
-	  setup() {
-	    this._afterSetupFns.forEach(fn => fn.call(this, this), this);
-	    this.setupRan = true;
-	  }
-	};
+	      this._afterSetupFns.forEach(function (fn) {
+	        return fn.call(_this, _this);
+	      }, this);
+	      this.setupRan = true;
+	    }
+	  }]);
+	
+	  return AfterSetup;
+	}();
 
 /***/ },
 /* 4 */
@@ -251,12 +310,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @class Role
 	 */
 	
-	const nouns = __webpack_require__(5);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	class Role extends __webpack_require__(3) {
-	  constructor(name) {
-	    super();
-	    this.name = name;
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var nouns = __webpack_require__(5);
+	
+	var Role = function (_require) {
+	  _inherits(Role, _require);
+	
+	  function Role(name) {
+	    _classCallCheck(this, Role);
+	
+	    var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Role).call(this));
+	
+	    _this.name = name;
+	    return _this;
 	  }
 	
 	  /**
@@ -268,28 +341,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @param  {string} noun
 	   * @return {boolean}
 	   */
-	  can(verb, noun) {
-	    if (!nouns.has(noun)) {
-	      return false;
-	    }
-	    return nouns.get(noun).checkAuthorization(this.name, verb);
-	  }
 	
-	  /**
-	   * Authorizes this role to perform an array of actions on a verb
-	   * @function
-	   * @see  Noun#authorize
-	   * @example  someRole.authorize(['create','read'], 'kitten');
-	   * @param  {String[]|String} verbs - Either an array of verbs already regestered with the noun, or `'*'` to allow access to all verbs
-	   * @param  {String} noun
-	   */
-	  authorize(verbs, noun) {
-	    if (!nouns.has(noun)) {
-	      throw new Error(`cannot authorize ${ noun }`);
+	
+	  _createClass(Role, [{
+	    key: 'can',
+	    value: function can(verb, noun) {
+	      if (!nouns.has(noun)) {
+	        return false;
+	      }
+	      return nouns.get(noun).checkAuthorization(this.name, verb);
 	    }
-	    nouns.get(noun).authorize(this.name, verbs);
-	  }
-	}
+	
+	    /**
+	     * Authorizes this role to perform an array of actions on a verb
+	     * @function
+	     * @see  Noun#authorize
+	     * @example  someRole.authorize(['create','read'], 'kitten');
+	     * @param  {String[]|String} verbs - Either an array of verbs already regestered with the noun, or `'*'` to allow access to all verbs
+	     * @param  {String} noun
+	     */
+	
+	  }, {
+	    key: 'authorize',
+	    value: function authorize(verbs, noun) {
+	      if (!nouns.has(noun)) {
+	        throw new Error('cannot authorize ' + noun);
+	      }
+	      nouns.get(noun).authorize(this.name, verbs);
+	    }
+	  }]);
+	
+	  return Role;
+	}(__webpack_require__(3));
 	
 	module.exports = Role;
 
@@ -299,7 +382,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	const NounManager = __webpack_require__(6);
+	var NounManager = __webpack_require__(6);
 	
 	module.exports = new NounManager();
 
@@ -311,16 +394,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/** @todo  extends Map */
 	
-	class NounManager {
-	  constructor() {
-	    this.map = new Map();
-	    this.set = this.map.set.bind(this.map);
-	    this.get = this.map.get.bind(this.map);
-	    this.has = this.map.has.bind(this.map);
-	    this.values = this.map.values.bind(this.map);
-	    this.clear = this.map.clear.bind(this.map);
-	  }
-	}
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var NounManager = function NounManager() {
+	  _classCallCheck(this, NounManager);
+	
+	  this.map = new Map();
+	  this.set = this.map.set.bind(this.map);
+	  this.get = this.map.get.bind(this.map);
+	  this.has = this.map.has.bind(this.map);
+	  this.values = this.map.values.bind(this.map);
+	  this.clear = this.map.clear.bind(this.map);
+	};
 	
 	module.exports = NounManager;
 
@@ -335,9 +420,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	
 	/** @todo  extends Map */
 	
-	class RoleManager {
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 	
-	  constructor() {
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	var RoleManager = function () {
+	  function RoleManager() {
+	    _classCallCheck(this, RoleManager);
+	
 	    this.map = new Map();
 	    this.set = this.map.set.bind(this.map);
 	    this.get = this.map.get.bind(this.map);
@@ -345,10 +435,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this.values = this.map.values.bind(this.map);
 	    this.clear = this.map.clear.bind(this.map);
 	  }
+<<<<<<< HEAD
 	  can(roles, verb, noun) {
 	    return roles.map(r => this.get(r) || { can: () => false }).some(r => r.can(verb, noun));
 	  }
 	}
+=======
+	
+	  _createClass(RoleManager, [{
+	    key: 'can',
+	    value: function can(roles, verb, noun) {
+	      var _this = this;
+	
+	      return roles.map(function (r) {
+	        return _this.get(r) || { can: function can() {
+	            return false;
+	          } };
+	      }).some(function (r) {
+	        return r.can(verb, noun);
+	      });
+	    }
+	  }]);
+	
+	  return RoleManager;
+	}();
+>>>>>>> ccb5892b78893a579e8bbb6d2d4072dfde164f88
 	
 	module.exports = RoleManager;
 
@@ -358,7 +469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	const RoleManager = __webpack_require__(7);
+	var RoleManager = __webpack_require__(7);
 	
 	module.exports = new RoleManager();
 
@@ -378,9 +489,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @module plugins/angular
 	 */
 	
-	const dmv = __webpack_require__(1);
-	const roleManager = __webpack_require__(7);
-	const canMixin = __webpack_require__(10);
+	var dmv = __webpack_require__(1);
+	var roleManager = __webpack_require__(7);
+	var canMixin = __webpack_require__(10);
 	
 	angular.module('dmv', []).factory('canPlugin', function () {
 	  return function (proto) {
@@ -388,59 +499,74 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	}).factory('authConfig', ["$rootScope", "$injector", function ($rootScope, $injector) {
 	
-	  let userGetterMethod = function () {};
-	  const getUser = function () {
+	  var userGetterMethod = function userGetterMethod() {};
+	  var asyncUserGetterMethod = function asyncUserGetterMethod() {};
+	  var canGetUserAsync = false;
+	
+	  var _getUser = function _getUser() {
 	    return $injector.invoke(userGetterMethod);
+	  };
+	  var getUserAsync = function getUserAsync() {
+	    return $injector.invoke(asyncUserGetterMethod);
 	  };
 	
 	  return {
-	    getUser: function (fn) {
+	    getUserAsync: function getUserAsync(fn) {
+	      asyncUserGetterMethod = fn;
+	      canGetUserAsync = true;
+	    },
+	    getUser: function getUser(fn) {
 	      userGetterMethod = fn;
 	
-	      $rootScope.can = (verb, noun) => {
+	      $rootScope.can = function (verb, noun) {
 	        try {
-	          return getUser().can(verb, noun);
+	          return _getUser().can(verb, noun);
 	        } catch (e) {
 	          return false;
 	        }
 	      };
-	      $rootScope.hasRole = role => {
+	      $rootScope.hasRole = function (role) {
 	        try {
-	          return getUser().hasRole(role);
+	          return _getUser().hasRole(role);
 	        } catch (e) {
 	          return false;
 	        }
 	      };
 	
 	      $rootScope.$on('$stateChangeStart', function (event, next) {
-	        const user = getUser();
-	        if (next && next.auth) {
-	          if (!user) {
-	            $rootScope.$broadcast('NOT_AUTHENTICATED');
-	            event.preventDefault();
-	            return;
-	          }
-	          if (next.auth === true) {
-	            return;
-	          }
-	          if (typeof next.auth === 'function') {
-	            if (!next.auth.call(event, user, next)) {
+	        var user = _getUser();
+	        if (canGetUserAsync) {
+	          user = getUserAsync();
+	        }
+	        return Promise.resolve(user).then(function (user) {
+	          if (next && next.auth) {
+	            if (!user) {
+	              $rootScope.$broadcast('NOT_AUTHENTICATED');
 	              event.preventDefault();
-	              $rootScope.$broadcast('NOT_AUTHORIZED');
+	              return;
 	            }
-	            return;
-	          }
-	          for (let verb in next.auth) {
-	            if (next.auth.hasOwnProperty(verb)) {
-	              let noun = next.auth[verb];
-	              if (!user.can(verb, noun)) {
+	            if (next.auth === true) {
+	              return;
+	            }
+	            if (typeof next.auth === 'function') {
+	              if (!next.auth.call(event, user, next)) {
 	                event.preventDefault();
 	                $rootScope.$broadcast('NOT_AUTHORIZED');
-	                return;
+	              }
+	              return;
+	            }
+	            for (var verb in next.auth) {
+	              if (next.auth.hasOwnProperty(verb)) {
+	                var noun = next.auth[verb];
+	                if (!user.can(verb, noun)) {
+	                  event.preventDefault();
+	                  $rootScope.$broadcast('NOT_AUTHORIZED');
+	                  return;
+	                }
 	              }
 	            }
 	          }
-	        }
+	        });
 	      });
 	    }
 	  };
@@ -452,10 +578,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 	
-	const roles = __webpack_require__(8);
+	var roles = __webpack_require__(8);
 	
-	const onPermissionList = (list, verb, noun) => {
-	  return list && !!list.find(item => item.verb === verb && item.noun === noun);
+	var onPermissionList = function onPermissionList(list, verb, noun) {
+	  return list && !!list.find(function (item) {
+	    return item.verb === verb && item.noun === noun;
+	  });
 	};
 	
 	/**
@@ -481,10 +609,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Boolean}
 	 */
 	exports.hasRole = function (r) {
+	  var _this = this;
+	
 	  if (typeof r === 'string') {
 	    return this.roles.indexOf(r) !== -1;
 	  } else if (Array.isArray(r)) {
-	    return !r.some(role => this.roles.indexOf(role) === -1);
+	    return !r.some(function (role) {
+	      return _this.roles.indexOf(role) === -1;
+	    });
 	  }
 	};
 
