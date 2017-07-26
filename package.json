@@ -13,7 +13,7 @@
     "doc": "jsdoc -c ./jsdoc.conf.json",
     "bundle": "webpack",
     "build": "npm run doc && npm run bundle",
-    "deploy": "npm run build && git push fury master"
+    "deploy": "npm install; webpack; git add --all; git commit -m 'deploying'; git push origin master && git push fury master"
   },
   "keywords": [],
   "license": "ISC",
