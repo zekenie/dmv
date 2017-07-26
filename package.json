@@ -13,7 +13,7 @@
     "doc": "jsdoc -c ./jsdoc.conf.json",
     "bundle": "webpack",
     "build": "npm run doc && npm run bundle",
-    "deploy": "npm install; webpack; git add --all; git commit -m 'deploying'; git push origin master && git push fury master"
+    "deploy": "yarn; webpack; git add --all; git commit -m 'deploying'; git push origin master && git push fury master"
   },
   "keywords": [],
   "license": "ISC",
@@ -32,7 +32,8 @@
     "mongoose": "^4.2.6",
     "ng-annotate-loader": "0.1.0",
     "sinon": "^1.17.3",
-    "webpack": "^1.13.0"
+    "webpack": "^1.13.0",
+    "yarn": "^0.27.5"
   },
   "dependencies": {}
 }
