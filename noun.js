@@ -50,7 +50,11 @@ class Noun extends require('./afterSetup'){
     if(verbs === '*') {
       verbs = this.verbs;
     } else {
-      verbs = verbs.filter( (v) => this.verbs.has(v), this);
+      let invalidVerbs = verbs.filter(v => !this.verbs.has(v));
+      if (invalidVerbs.length) {
+        console.warn(new Error(`${invalidVerbs.join(',')} are not valid verbs for this noun.`));
+      }
+      verbs = verbs.filter(v => this.verbs.has(v));
     }
     this.permissions[role] = this.permissions[role] || new Set();
     verbs.forEach( (v) => this.permissions[role].add(v) );

@@ -17,6 +17,9 @@ const nouns = require('./nouns');
 const roles = require('./roles');
 
 const addEntity = function (store, Constructor, name, after) {
+  if (!name) {
+    console.warn(new Error('Entity names cannot be empty'));
+  }
   if(!store.get(name)) { store.set(name, new Constructor(name)); }
   const instance = store.get(name);
   if(this.setupRan) { instance.setupRan = true; }
@@ -27,7 +30,7 @@ const addEntity = function (store, Constructor, name, after) {
 /**
  * Register a new noun
  * @param  {string} name - noun name
- * @param  {function} after - fn to run after setup. Passed noun instance. 
+ * @param  {function} after - fn to run after setup. Passed noun instance.
  * @return {noun}       returns noun instance
  */
 exports.noun = addEntity.bind(exports, nouns, Noun);
@@ -35,7 +38,7 @@ exports.noun = addEntity.bind(exports, nouns, Noun);
 /**
  * Register a new role
  * @param  {string} name - role name
- * @param  {function} after - fn to run after setup. Passed role instance. 
+ * @param  {function} after - fn to run after setup. Passed role instance.
  * @return {role}       returns role instance
  */
 exports.role = addEntity.bind(exports, roles, Role);
