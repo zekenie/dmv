@@ -88,6 +88,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	const roles = __webpack_require__(8);
 	
 	const addEntity = function (store, Constructor, name, after) {
+	  if (!name) {
+	    console.warn(new Error('Entity names cannot be empty'));
+	  }
 	  if (!store.get(name)) {
 	    store.set(name, new Constructor(name));
 	  }
@@ -104,7 +107,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Register a new noun
 	 * @param  {string} name - noun name
-	 * @param  {function} after - fn to run after setup. Passed noun instance. 
+	 * @param  {function} after - fn to run after setup. Passed noun instance.
 	 * @return {noun}       returns noun instance
 	 */
 	exports.noun = addEntity.bind(exports, nouns, Noun);
@@ -112,7 +115,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Register a new role
 	 * @param  {string} name - role name
-	 * @param  {function} after - fn to run after setup. Passed role instance. 
+	 * @param  {function} after - fn to run after setup. Passed role instance.
 	 * @return {role}       returns role instance
 	 */
 	exports.role = addEntity.bind(exports, roles, Role);
@@ -198,7 +201,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (verbs === '*') {
 	      verbs = this.verbs;
 	    } else {
-	      verbs = verbs.filter(v => this.verbs.has(v), this);
+	      let invalidVerbs = verbs.filter(v => !this.verbs.has(v));
+	      if (invalidVerbs.length) {
+	        console.warn(new Error(`${ invalidVerbs.join(',') } are not valid verbs for this noun.`));
+	      }
+	      verbs = verbs.filter(v => this.verbs.has(v));
 	    }
 	    this.permissions[role] = this.permissions[role] || new Set();
 	    verbs.forEach(v => this.permissions[role].add(v));
@@ -382,84 +389,85 @@ return /******/ (function(modules) { // webpackBootstrap
 	const roleManager = __webpack_require__(7);
 	const canMixin = __webpack_require__(10);
 	
-	angular.module('dmv', []).factory('canPlugin', function () {
-	  return function (proto) {
-	    angular.extend(proto, canMixin);
-	  };
-	}).factory('authConfig', ["$rootScope", "$injector", function ($rootScope, $injector) {
+	module.exports = angular => {
+	  angular.module('dmv', []).factory('canPlugin', function () {
+	    return function (proto) {
+	      angular.extend(proto, canMixin);
+	    };
+	  }).factory('authConfig', function ($rootScope, $injector) {
+	    let userGetterMethod = function () {};
+	    let asyncUserGetterMethod = function () {};
+	    let canGetUserAsync = false;
 	
-	  let userGetterMethod = function () {};
-	  let asyncUserGetterMethod = function () {};
-	  let canGetUserAsync = false;
+	    const getUser = function () {
+	      return $injector.invoke(userGetterMethod);
+	    };
+	    const getUserAsync = function () {
+	      return $injector.invoke(asyncUserGetterMethod);
+	    };
 	
-	  const getUser = function () {
-	    return $injector.invoke(userGetterMethod);
-	  };
-	  const getUserAsync = function () {
-	    return $injector.invoke(asyncUserGetterMethod);
-	  };
+	    return {
+	      getUserAsync: function (fn) {
+	        asyncUserGetterMethod = fn;
+	        canGetUserAsync = true;
+	      },
+	      getUser: function (fn) {
+	        userGetterMethod = fn;
 	
-	  return {
-	    getUserAsync: function (fn) {
-	      asyncUserGetterMethod = fn;
-	      canGetUserAsync = true;
-	    },
-	    getUser: function (fn) {
-	      userGetterMethod = fn;
+	        $rootScope.can = (verb, noun) => {
+	          try {
+	            return getUser().can(verb, noun);
+	          } catch (e) {
+	            return false;
+	          }
+	        };
+	        $rootScope.hasRole = role => {
+	          try {
+	            return getUser().hasRole(role);
+	          } catch (e) {
+	            return false;
+	          }
+	        };
 	
-	      $rootScope.can = (verb, noun) => {
-	        try {
-	          return getUser().can(verb, noun);
-	        } catch (e) {
-	          return false;
-	        }
-	      };
-	      $rootScope.hasRole = role => {
-	        try {
-	          return getUser().hasRole(role);
-	        } catch (e) {
-	          return false;
-	        }
-	      };
-	
-	      $rootScope.$on('$stateChangeStart', function (event, next) {
-	        let user = getUser();
-	        if (canGetUserAsync) {
-	          user = getUserAsync();
-	        }
-	        return Promise.resolve(user).then(user => {
-	          if (next && next.auth) {
-	            if (!user) {
-	              $rootScope.$broadcast('NOT_AUTHENTICATED');
-	              event.preventDefault();
-	              return;
-	            }
-	            if (next.auth === true) {
-	              return;
-	            }
-	            if (typeof next.auth === 'function') {
-	              if (!next.auth.call(event, user, next)) {
+	        $rootScope.$on('$stateChangeStart', function (event, next) {
+	          let user = getUser();
+	          if (canGetUserAsync) {
+	            user = getUserAsync();
+	          }
+	          return Promise.resolve(user).then(user => {
+	            if (next && next.auth) {
+	              if (!user) {
+	                $rootScope.$broadcast('NOT_AUTHENTICATED');
 	                event.preventDefault();
-	                $rootScope.$broadcast('NOT_AUTHORIZED');
+	                return;
 	              }
-	              return;
-	            }
-	            for (let verb in next.auth) {
-	              if (next.auth.hasOwnProperty(verb)) {
-	                let noun = next.auth[verb];
-	                if (!user.can(verb, noun)) {
+	              if (next.auth === true) {
+	                return;
+	              }
+	              if (typeof next.auth === 'function') {
+	                if (!next.auth.call(event, user, next)) {
 	                  event.preventDefault();
 	                  $rootScope.$broadcast('NOT_AUTHORIZED');
-	                  return;
+	                }
+	                return;
+	              }
+	              for (let verb in next.auth) {
+	                if (next.auth.hasOwnProperty(verb)) {
+	                  let noun = next.auth[verb];
+	                  if (!user.can(verb, noun)) {
+	                    event.preventDefault();
+	                    $rootScope.$broadcast('NOT_AUTHORIZED');
+	                    return;
+	                  }
 	                }
 	              }
 	            }
-	          }
+	          });
 	        });
-	      });
-	    }
-	  };
-	}]);
+	      }
+	    };
+	  });
+	};
 
 /***/ },
 /* 10 */

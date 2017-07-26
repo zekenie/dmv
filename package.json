@@ -9,10 +9,11 @@
     "node": "7.10.1"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha",
-    "doc": "./node_modules/.bin/jsdoc -c ./jsdoc.conf.json",
-    "bundle": "./node_modules/.bin/webpack",
-    "build": "npm run doc && npm run bundle"
+    "test": "mocha",
+    "doc": "jsdoc -c ./jsdoc.conf.json",
+    "bundle": "webpack",
+    "build": "npm run doc && npm run bundle",
+    "deploy": "npm run build && git push fury master"
   },
   "keywords": [],
   "license": "ISC",
